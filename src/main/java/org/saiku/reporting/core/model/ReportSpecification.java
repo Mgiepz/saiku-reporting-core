@@ -53,6 +53,7 @@ public class ReportSpecification {
 		this.pageHeaders = new ArrayList<Label>();
 		this.pageFooters = new ArrayList<Label>();
 		this.reportFooters = new ArrayList<Label>();
+		this.groupDefinitions = new ArrayList<GroupDefinition>();
 		this.pageSetup = new PageSetup();
 		this.charts = new ArrayList<Chart>();
 	}

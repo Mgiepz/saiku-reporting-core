@@ -15,6 +15,7 @@ import org.pentaho.reporting.engine.classic.core.function.StructureFunction;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
 import org.pentaho.reporting.libraries.resourceloader.ResourceManager;
+import org.saiku.reporting.core.builder.AbstractBuilder;
 import org.saiku.reporting.core.builder.CrosstabBuilder;
 import org.saiku.reporting.core.builder.PageFooterBuilder;
 import org.saiku.reporting.core.builder.PageHeaderBuilder;
@@ -107,7 +108,7 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 		ReportHeaderBuilder headerBuilder = new ReportHeaderBuilder(attributeContext, definition, flowController, reportSpecification);
 		headerBuilder.build();		
 		
-		ReportFooterBuilder footerBuilder = new ReportFooterBuilder(attributeContext, definition, flowController, reportSpecification);
+		AbstractBuilder footerBuilder = new ReportFooterBuilder(attributeContext, definition, flowController, reportSpecification);
 		footerBuilder.build();			
 
 		PageHeaderBuilder pageHeaderBuilder = new PageHeaderBuilder(attributeContext, definition, flowController, reportSpecification);

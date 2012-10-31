@@ -78,7 +78,7 @@ public class MergeFormatUtil {
 	 */
 	public static void mergeElementFormats(ElementStyleSheet prptFormat, ElementFormat saikuFormat) {
 
-		if (prptFormat == null && saikuFormat == null) {
+		if (prptFormat == null || saikuFormat == null) {
 			return;
 		}
 

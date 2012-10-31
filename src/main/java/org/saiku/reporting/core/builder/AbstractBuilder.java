@@ -3,6 +3,8 @@
  */
 package org.saiku.reporting.core.builder;
 
+import java.util.ArrayList;
+
 import org.pentaho.reporting.engine.classic.core.AbstractReportDefinition;
 import org.pentaho.reporting.engine.classic.core.AttributeNames;
 import org.pentaho.reporting.engine.classic.core.Element;
@@ -14,6 +16,7 @@ import org.pentaho.reporting.engine.classic.core.metadata.ElementType;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
 import org.saiku.reporting.core.model.ElementFormat;
+import org.saiku.reporting.core.model.Label;
 import org.saiku.reporting.core.model.ReportSpecification;
 
 /**
@@ -94,6 +97,31 @@ public abstract class AbstractBuilder {
 		
 		
 	}
+
+	protected void processElementInternal(ReportElement e, ArrayList<Label> labels, String uid) {
+				ElementFormat format = null;
+				String value = null;
+						
+				if(realIndex < labels.size()){
+					Label label = labels.get(realIndex);
+					if(label!=null){
+						format = label.getFormat();
+						value = label.getValue();
+					}
+				}else{
+					//the label is not yet in the the list
+					value = (String) e.getAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.VALUE);
+					Label label = new Label(value);
+					format = new ElementFormat();
+					label.setFormat(format);
+					labels.add(label);
+				}
+
+
+				Element el = (Element) e;
+				
+				markupElement(e, format, value, uid, el);
+			}
 
 
 }

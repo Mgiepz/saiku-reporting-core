@@ -17,7 +17,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @XmlRootElement(name="rootband-format")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RootBandFormat extends ElementFormat {
-	
+
 	@XmlElement(name="repeat")
 	private Boolean repeat = true;
 	

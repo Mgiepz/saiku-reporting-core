@@ -91,8 +91,8 @@
 //			
 //			//json
 //		
-	//			ObjectMapper mapper = new ObjectMapper();
-	//			String writeValueAsString = mapper.writeValueAsString(fixture);
+//				ObjectMapper mapper = new ObjectMapper();
+//				String writeValueAsString = mapper.writeValueAsString(fixture);
 //			System.out.println(writeValueAsString);
 //			
 //			ReportSpecification masterModel = mapper.readValue(writeValueAsString, ReportSpecification.class);

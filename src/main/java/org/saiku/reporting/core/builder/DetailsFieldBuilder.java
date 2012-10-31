@@ -10,7 +10,6 @@ import org.pentaho.reporting.engine.classic.core.AttributeNames;
 import org.pentaho.reporting.engine.classic.core.Band;
 import org.pentaho.reporting.engine.classic.core.Element;
 import org.pentaho.reporting.engine.classic.core.ReportElement;
-import org.pentaho.reporting.engine.classic.core.metadata.ElementType;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.style.ElementStyleKeys;
 import org.pentaho.reporting.engine.classic.core.wizard.AutoGeneratorUtility;
@@ -25,6 +24,8 @@ import org.saiku.reporting.core.model.ReportSpecification;
  */
 public class DetailsFieldBuilder extends AbstractBuilder{
 	
+	private static final String RPT_DETAILS = "rpt-dtl-";
+
 	public DetailsFieldBuilder(DefaultDataAttributeContext attributeContext, AbstractReportDefinition definition,
 			DefaultFlowController flowController, ReportSpecification reportSpecification) {
 		super(attributeContext, definition, flowController, reportSpecification);
@@ -32,17 +33,17 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 
 	private static final Log logger = LogFactory.getLog(DetailsFieldBuilder.class);
 
-	public static Element build(String fieldId, ElementType computeElementType) {
-		   final Element detailsElement = new Element();
-		    detailsElement.getStyle().setStyleProperty(ElementStyleKeys.DYNAMIC_HEIGHT, Boolean.TRUE);
-		    detailsElement.setElementType(computeElementType);
-		    detailsElement.setAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.FIELD, fieldId);
-		    detailsElement.setAttribute(AttributeNames.Wizard.NAMESPACE,
-		        AttributeNames.Wizard.ALLOW_METADATA_STYLING, Boolean.TRUE);
-		    detailsElement.setAttribute(AttributeNames.Wizard.NAMESPACE,
-		        AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES, Boolean.TRUE);
-		    return detailsElement;
-	}
+//	public static Element build(String fieldId, ElementType computeElementType) {
+//		   final Element detailsElement = new Element();
+//		    detailsElement.getStyle().setStyleProperty(ElementStyleKeys.DYNAMIC_HEIGHT, Boolean.TRUE);
+//		    detailsElement.setElementType(computeElementType);
+//		    detailsElement.setAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.FIELD, fieldId);
+//		    detailsElement.setAttribute(AttributeNames.Wizard.NAMESPACE,
+//		        AttributeNames.Wizard.ALLOW_METADATA_STYLING, Boolean.TRUE);
+//		    detailsElement.setAttribute(AttributeNames.Wizard.NAMESPACE,
+//		        AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES, Boolean.TRUE);
+//		    return detailsElement;
+//	}
 
 	public void build(Band detailsHeader, Band detailsFooter, Band itemBand, FieldDefinition field, float width, int j) {
 			if (StringUtils.isEmpty(field.getId())) {
@@ -67,6 +68,14 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 					AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES))) {
 				detailElement.setAttribute(AttributeNames.Wizard.NAMESPACE, "CachedWizardFieldData", field);
 			}
+			
+			String uid = RPT_DETAILS + j;
+
+			String htmlClass = "saiku " + uid;
+			
+			detailElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass);
+			detailElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid);
+			
 			itemBand.addElement(detailElement);
 
 			if (Boolean.TRUE.equals(field.isHideRepeating())) {
@@ -120,8 +129,7 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 
 	@Override
 	protected void processElement(ReportElement element, int i) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 }

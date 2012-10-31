@@ -13,11 +13,12 @@ import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowContr
 import org.pentaho.reporting.engine.classic.core.style.BandStyleKeys;
 import org.pentaho.reporting.engine.classic.core.wizard.AutoGeneratorUtility;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
-import org.pentaho.reporting.engine.classic.core.wizard.RelationalAutoGeneratorPreProcessor;
 import org.saiku.reporting.core.model.FieldDefinition;
 import org.saiku.reporting.core.model.ReportSpecification;
 
 public class TableBuilder extends AbstractBuilder{
+	
+	private static final Log logger = LogFactory.getLog(TableBuilder.class);
 	
 	public TableBuilder(DefaultDataAttributeContext attributeContext, AbstractReportDefinition definition,
 			DefaultFlowController flowController, ReportSpecification reportSpecification) {
@@ -32,8 +33,6 @@ public class TableBuilder extends AbstractBuilder{
 		if (detailFieldDefinitions.isEmpty()) {
 			return;
 		}
-
-		//final RelationalAutoGeneratorPreProcessor generatorPreProcessor = new RelationalAutoGeneratorPreProcessor();
 
 		definition.getDetailsFooter().setVisible(false);
 		
@@ -79,19 +78,11 @@ public class TableBuilder extends AbstractBuilder{
 			}
 		}
 
-//      Saiku Specific stuff
-//		iterateSection(detailsHeader, new SaikuUpdateDetailsHeaderTask(model));
-//		iterateSection(itemBand, new SaikuUpdateDetailsTask(model));
-
 	}
-
-	private static final Log logger = LogFactory.getLog(TableBuilder.class);
 
 	@Override
 	protected void processElement(ReportElement element, int i) {
-		// TODO Auto-generated method stub
-		
+		// DO NOTHING		
 	}
-
 
 }

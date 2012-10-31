@@ -10,7 +10,6 @@ public class ParameterDefinitionBuilder {
 
 		DefaultParameterDefinition paramDef = new DefaultParameterDefinition();
 
-
 //		List<SaikuParameter> parameters = model.getParameters();
 //		reportSpec.get
 //

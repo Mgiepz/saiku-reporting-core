@@ -3,20 +3,17 @@ package org.saiku.reporting.core.builder;
 import java.util.ArrayList;
 
 import org.pentaho.reporting.engine.classic.core.AbstractReportDefinition;
-import org.pentaho.reporting.engine.classic.core.AttributeNames;
-import org.pentaho.reporting.engine.classic.core.Element;
 import org.pentaho.reporting.engine.classic.core.ReportElement;
 import org.pentaho.reporting.engine.classic.core.ReportProcessingException;
 import org.pentaho.reporting.engine.classic.core.Section;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
-import org.saiku.reporting.core.model.ElementFormat;
 import org.saiku.reporting.core.model.Label;
 import org.saiku.reporting.core.model.ReportSpecification;
 
 public class PageHeaderBuilder extends AbstractBuilder {
 
-	private String PAGE_HEADER_MSG = "rpt-phd-0-";
+	private String PAGE_HEADER_MSG = "rpt-phd-";
 	
 	public PageHeaderBuilder(DefaultDataAttributeContext attributeContext,
 			AbstractReportDefinition definition,
@@ -27,32 +24,12 @@ public class PageHeaderBuilder extends AbstractBuilder {
 
 	@Override
 	protected void processElement(ReportElement e, int i) {
+	
+		ArrayList<Label> labels = this.reportSpecification.getPageHeaders();
 
-		ArrayList<Label> pageHeaders = this.reportSpecification.getPageHeaders();
-		
-		ElementFormat format = null;
-		String value = null;
-				
-		if(realIndex < pageHeaders.size()){
-			Label label = pageHeaders.get(realIndex);
-			format = label.getFormat();
-			value = label.getValue();
-		}else{
-			//the label is not yet in the the list
-			value = (String) e.getAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.VALUE);
-			Label label = new Label(value);
-			format = new ElementFormat();
-			label.setFormat(format);
-			pageHeaders.add(label);
-		}
-		
 		String uid = PAGE_HEADER_MSG + realIndex;
 		
-		//markup the element
-		
-		Element el = (Element) e;
-		
-		markupElement(e, format, value, uid, el);
+		processElementInternal(e, labels, uid);
 
 	}
 	

@@ -1,6 +1,7 @@
 package org.saiku.reporting.core.builder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.pentaho.reporting.engine.classic.core.AbstractReportDefinition;
 import org.pentaho.reporting.engine.classic.core.AttributeNames;
@@ -125,7 +126,18 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 
 	protected void configureRelationalGroupHeader(final RelationalGroup group, final GroupDefinition groupDefinition,
 			final int index) {
-		final RootBandFormat headerDefinition = groupDefinition.getHeaderFormats().get(0);
+
+		RootBandFormat headerDefinition = null;
+		
+		List<RootBandFormat> headerFormats = groupDefinition.getHeaderFormats();
+		
+		if(headerFormats.isEmpty()){
+			headerDefinition = new RootBandFormat();
+			headerFormats.add(0, headerDefinition);
+		}else{
+			headerDefinition = headerFormats.get(0);
+		}
+		 
 		if (headerDefinition.isVisible()) {
 			final GroupHeader header = group.getHeader();
 			final Boolean repeat = headerDefinition.isRepeat();
@@ -156,8 +168,8 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 			headerMessageElement.setAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.NAME,
 					groupDefinition.getDisplayName());
 
-			//????
-			String value = groupDefinition.getDisplayName() + ": $(" + groupDefinition.getFieldId() + ")";
+			String defaultValue = groupDefinition.getDisplayName() + ": $(" + groupDefinition.getFieldId() + ")";
+			String value = headerDefinition.getLabel()!=null ? headerDefinition.getLabel() : defaultValue;
 			
 			headerMessageElement.setAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.VALUE,
 					value);
@@ -402,8 +414,7 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 
 	@Override
 	protected void processElement(ReportElement element, int i) {
-		// TODO Auto-generated method stub
-		
+		// DO NOTHING
 	}
 
 }

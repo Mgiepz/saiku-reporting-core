@@ -55,6 +55,10 @@ public class FieldDefinition {
 	@JsonProperty("dataFormat")
 	private String dataFormat;
 	
+	@XmlElement(name="formula")
+	@JsonProperty("formula")
+	private String formula;
+		
 	@XmlElement(name="null-string")
 	@JsonProperty("nullString")
 	private String nullString;
@@ -79,15 +83,9 @@ public class FieldDefinition {
      *
      * should header format and summary format also go here?
      * "normal" group footer formats too?
-     * should the ElementFormat hold an "override String"?
-     *
      */
 	private HashMap<String,HashMap<String,ElementFormat>> elementFormats;
     
-
-//    private String formula; //if this is set we have a calculated column
-//    private String overrideValue; //if this is set we have a message field
-
     public ElementFormat getHeaderFormat() {
 		return headerFormat;
 	}
@@ -161,6 +159,14 @@ public class FieldDefinition {
 
 	public AggregationFunction getAggregationFunction() {
 		return aggregationFunction;
+	}
+
+	public String getFormula() {
+		return formula;
+	}
+
+	public void setFormula(String formula) {
+		this.formula = formula;
 	}
 
 }
