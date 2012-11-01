@@ -14,6 +14,7 @@ import org.pentaho.reporting.engine.classic.core.function.ProcessingContext;
 import org.pentaho.reporting.engine.classic.core.function.StructureFunction;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
+import org.pentaho.reporting.engine.classic.wizard.WizardOverrideFormattingFunction;
 import org.pentaho.reporting.libraries.resourceloader.ResourceManager;
 import org.saiku.reporting.core.builder.AbstractBuilder;
 import org.saiku.reporting.core.builder.CrosstabBuilder;
@@ -74,7 +75,7 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 		for (int i = 0; i < functions.length; i++)
 		{
 			final StructureFunction function = functions[i];
-			if (function instanceof OverrideFormattingFunction)
+			if (function instanceof WizardOverrideFormattingFunction)
 			{
 				hasOverrideFunction = true;
 				break;
@@ -82,7 +83,7 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 		}
 		if (!hasOverrideFunction)
 		{
-			definition.addStructureFunction(new OverrideFormattingFunction());
+			definition.addStructureFunction(new WizardOverrideFormattingFunction());
 		}
 
 		final ProcessingContext reportContext = flowController.getReportContext();
@@ -137,6 +138,13 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 		{
 			throw new IllegalStateException();
 		}
+	}
+
+	@Override
+	public SubReport performPreDataProcessing(SubReport arg0,
+			DefaultFlowController arg1) throws ReportProcessingException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
