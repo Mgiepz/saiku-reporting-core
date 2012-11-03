@@ -166,7 +166,7 @@ public class MergeFormatUtil {
 
 		if (saikuFormat.getFontSize() == null) {
 			final Integer size = (Integer) prptFormat.getStyleProperty(TextStyleKeys.FONTSIZE, null);
-			saikuFormat.setFontSize(size.intValue());
+			if(size != null) saikuFormat.setFontSize(size.intValue());
 		} else {
 			prptFormat.setStyleProperty(TextStyleKeys.FONTSIZE, new Integer(saikuFormat.getFontSize()));
 		}
