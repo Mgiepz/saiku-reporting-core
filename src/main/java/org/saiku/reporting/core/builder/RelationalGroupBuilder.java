@@ -90,7 +90,7 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 			}
 		}
 		// Remove any group bands are not being used ie. groups with no fields
-		removedUnusedTemplateGroups(groupDefinitions.size());
+		GroupUtils.removedUnusedTemplateGroups(groupDefinitions.size(),definition);
 
 		i++;
 
@@ -213,46 +213,46 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 		}
 	}
 
-	/**
-	 * Removes the unusedTemplateGroups based on the assumption that if a group
-	 * doesn't have any fields assigned to it that it is empty.
-	 * 
-	 * @param definition
-	 */
-	private void removedUnusedTemplateGroups(final int groupsDefined) {
-		final RelationalGroup[] templateRelationalGroups = getTemplateRelationalGroups(definition);
-		final int templateRelationalGroupCount = templateRelationalGroups.length;
-		for (int i = groupsDefined; i < templateRelationalGroupCount; i++) {
-			final RelationalGroup templateRelationalGroup = templateRelationalGroups[i];
-			definition.removeGroup(templateRelationalGroup);
-		}
-	}
-
-	/**
-	 * @param definition
-	 * @return the relational groups in the templates in a flattened array.
-	 */
-	private RelationalGroup[] getTemplateRelationalGroups(AbstractReportDefinition definition) {
-		final ArrayList<RelationalGroup> relationalGroups = new ArrayList<RelationalGroup>();
-		Group group = definition.getRootGroup();
-		while (group != null && group instanceof RelationalGroup) {
-			relationalGroups.add((RelationalGroup) group);
-			final GroupBody body = group.getBody();
-			if (body instanceof SubGroupBody) {
-				final SubGroupBody sgBody = (SubGroupBody) body;
-				if (sgBody.getGroup() instanceof RelationalGroup) {
-					group = sgBody.getGroup();
-				} else {
-					group = null;
-				}
-			} else {
-				group = null;
-			}
-		}
-
-		return relationalGroups.toArray(new RelationalGroup[relationalGroups.size()]);
-	}
-	
+//	/**
+//	 * Removes the unusedTemplateGroups based on the assumption that if a group
+//	 * doesn't have any fields assigned to it that it is empty.
+//	 * 
+//	 * @param definition
+//	 */
+//	private void removedUnusedTemplateGroups(final int groupsDefined) {
+//		final RelationalGroup[] templateRelationalGroups = getTemplateRelationalGroups(definition);
+//		final int templateRelationalGroupCount = templateRelationalGroups.length;
+//		for (int i = groupsDefined; i < templateRelationalGroupCount; i++) {
+//			final RelationalGroup templateRelationalGroup = templateRelationalGroups[i];
+//			definition.removeGroup(templateRelationalGroup);
+//		}
+//	}
+//
+//	/**
+//	 * @param definition
+//	 * @return the relational groups in the templates in a flattened array.
+//	 */
+//	private RelationalGroup[] getTemplateRelationalGroups(AbstractReportDefinition definition) {
+//		final ArrayList<RelationalGroup> relationalGroups = new ArrayList<RelationalGroup>();
+//		Group group = definition.getRootGroup();
+//		while (group != null && group instanceof RelationalGroup) {
+//			relationalGroups.add((RelationalGroup) group);
+//			final GroupBody body = group.getBody();
+//			if (body instanceof SubGroupBody) {
+//				final SubGroupBody sgBody = (SubGroupBody) body;
+//				if (sgBody.getGroup() instanceof RelationalGroup) {
+//					group = sgBody.getGroup();
+//				} else {
+//					group = null;
+//				}
+//			} else {
+//				group = null;
+//			}
+//		}
+//
+//		return relationalGroups.toArray(new RelationalGroup[relationalGroups.size()]);
+//	}
+//	
 	protected void configureRelationalGroupFooter(final RelationalGroup group, final GroupDefinition groupDefinitionDefinition, final int index)
 	throws ReportProcessingException {
 

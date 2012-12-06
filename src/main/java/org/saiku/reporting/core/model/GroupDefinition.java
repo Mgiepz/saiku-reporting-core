@@ -20,8 +20,17 @@ public class GroupDefinition {
 
 		this.footerFormat = new RootBandFormat();
 		this.headerFormats = new ArrayList<RootBandFormat>();
-		this.sort = SortType.ASC;
+		this.sort = SortType.ASC; //brauch ich das hier im modell? ist doch eigtl. in der query
 		this.type = GroupType.RELATIONAL;
+		this.printSummary = false;
+	}
+
+	public boolean isPrintSummary() {
+		return printSummary;
+	}
+
+	public void setPrintSummary(boolean printSummary) {
+		this.printSummary = printSummary;
 	}
 
 	public GroupType getType() {
@@ -124,6 +133,10 @@ public class GroupDefinition {
 	@XmlElement(name="group-name")
 	@JsonProperty("groupName")
 	private String groupName;
+
+	@XmlElement(name="print-summary")
+	@JsonProperty("printSummary")
+	private boolean printSummary;
 	
 	@XmlElement(name="header-formats")
 	@JsonProperty("headerFormats")

@@ -89,7 +89,7 @@ public abstract class AbstractBuilder {
 			}
 
 			if(format!=null){
-				MergeFormatUtil.mergeElementFormats(e.getStyle(), format);
+				MergeFormatUtil.mergeElementFormats(e, format);
 			}
 			
 			realIndex++;
@@ -109,7 +109,7 @@ public abstract class AbstractBuilder {
 						value = label.getValue();
 					}
 				}else{
-					//the label is not yet in the the list
+					//the label is not yet in the list
 					value = (String) e.getAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.VALUE);
 					Label label = new Label(value);
 					format = new ElementFormat();

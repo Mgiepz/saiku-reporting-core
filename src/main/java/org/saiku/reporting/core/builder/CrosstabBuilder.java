@@ -326,5 +326,5 @@ public class CrosstabBuilder extends AbstractBuilder {
 		// TODO Auto-generated method stub
 
 	}
-
+	
 }

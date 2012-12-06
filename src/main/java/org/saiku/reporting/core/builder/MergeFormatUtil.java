@@ -26,10 +26,14 @@ import java.beans.PropertyDescriptor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.pentaho.reporting.engine.classic.core.Element;
 import org.pentaho.reporting.engine.classic.core.ElementAlignment;
+import org.pentaho.reporting.engine.classic.core.ReportElement;
+import org.pentaho.reporting.engine.classic.core.layout.style.SimpleStyleSheet;
 import org.pentaho.reporting.engine.classic.core.style.ElementStyleKeys;
 import org.pentaho.reporting.engine.classic.core.style.ElementStyleSheet;
 import org.pentaho.reporting.engine.classic.core.style.TextStyleKeys;
+import org.pentaho.reporting.engine.classic.core.style.resolver.SimpleStyleResolver;
 import org.saiku.reporting.core.model.ElementFormat;
 
 /**
@@ -48,24 +52,24 @@ public class MergeFormatUtil {
 	 * Copies all element that are not null from the source to the target
 	 * if it is not null in the target
 	 */
-	public static void mergeElementFormats(ElementFormat source, ElementFormat target) throws Exception {
-
-		BeanInfo beanInfo = Introspector.getBeanInfo(target.getClass());
-
-		for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
-
-			if (descriptor.getWriteMethod() != null) {
-
-				Object sourceValue = descriptor.getReadMethod().invoke(
-						source);
-				if (sourceValue != null) {
-					descriptor.getWriteMethod().invoke(target, sourceValue);
-				}
-
-			}
-		}
-
-	}
+//	public static void mergeElementFormats(ElementFormat source, ElementFormat target) throws Exception {
+//
+//		BeanInfo beanInfo = Introspector.getBeanInfo(target.getClass());
+//
+//		for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
+//
+//			if (descriptor.getWriteMethod() != null) {
+//
+//				Object sourceValue = descriptor.getReadMethod().invoke(
+//						source);
+//				if (sourceValue != null) {
+//					descriptor.getWriteMethod().invoke(target, sourceValue);
+//				}
+//
+//			}
+//		}
+//		
+//	}
 
 
 
@@ -76,21 +80,24 @@ public class MergeFormatUtil {
 	 * @param prptFormat
 	 * @param saikuFormat
 	 */
-	public static void mergeElementFormats(ElementStyleSheet prptFormat, ElementFormat saikuFormat) {
+	public static void mergeElementFormats(ReportElement detailElement, ElementFormat saikuFormat) {
 
+		SimpleStyleSheet styleSheet = SimpleStyleResolver.resolveOneTime(detailElement); //TODO: cache this
+		ElementStyleSheet prptFormat = detailElement.getStyle();
+		
 		if (prptFormat == null || saikuFormat == null) {
 			return;
 		}
 
 		if (saikuFormat.getLeftPadding() == null) {
-			final Float padding = (Float) prptFormat.getStyleProperty(ElementStyleKeys.PADDING_LEFT, null);
+			final Float padding = (Float) styleSheet.getStyleProperty(ElementStyleKeys.PADDING_LEFT, null);
 			saikuFormat.setLeftPadding(padding);
 		} else {
 			prptFormat.setStyleProperty(ElementStyleKeys.PADDING_LEFT,saikuFormat.getLeftPadding());
 		}
 
 		if (saikuFormat.getRightPadding() == null) {
-			final Float padding = (Float) prptFormat.getStyleProperty(ElementStyleKeys.PADDING_RIGHT, null);
+			final Float padding = (Float) styleSheet.getStyleProperty(ElementStyleKeys.PADDING_RIGHT, null);
 			saikuFormat.setRightPadding(padding);
 		} else {
 			prptFormat.setStyleProperty(ElementStyleKeys.PADDING_RIGHT,saikuFormat.getRightPadding());
@@ -101,7 +108,7 @@ public class MergeFormatUtil {
 		 */
 
 		if (saikuFormat.getWidth() == null) {
-			final Float width = (Float) prptFormat.getStyleProperty(ElementStyleKeys.MIN_WIDTH, null);
+			final Float width = (Float) styleSheet.getStyleProperty(ElementStyleKeys.MIN_WIDTH, null);
 //			saikuFormat.setWidth(-width);
 		} else {
 			// prptFormat.setStyleProperty(ElementStyleKeys.MIN_WIDTH,
@@ -109,63 +116,63 @@ public class MergeFormatUtil {
 		}
 
 		if (saikuFormat.getBackgroundColor() == null) {
-			final Color color = (Color) prptFormat.getStyleProperty(ElementStyleKeys.BACKGROUND_COLOR, null);
+			final Color color = (Color) styleSheet.getStyleProperty(ElementStyleKeys.BACKGROUND_COLOR, null);
 			saikuFormat.setBackgroundColor(color);
 		} else {
 			prptFormat.setStyleProperty(ElementStyleKeys.BACKGROUND_COLOR, saikuFormat.getBackgroundColor());
 		}
 
 		if (saikuFormat.getFontColor() == null) {
-			final Color color = (Color) prptFormat.getStyleProperty(ElementStyleKeys.PAINT, null);
+			final Color color = (Color) styleSheet.getStyleProperty(ElementStyleKeys.PAINT, null);
 			saikuFormat.setFontColor(color);
 		} else {
 			prptFormat.setStyleProperty(ElementStyleKeys.PAINT, saikuFormat.getFontColor());
 		}
 
 		if (saikuFormat.getFontName() == null) {
-			final String font = (String) prptFormat.getStyleProperty(TextStyleKeys.FONT, null);
+			final String font = (String) styleSheet.getStyleProperty(TextStyleKeys.FONT, null);
 			saikuFormat.setFontName(font);
 		} else {
 			prptFormat.setStyleProperty(TextStyleKeys.FONT, saikuFormat.getFontName());
 		}
 
 		if (saikuFormat.getFontBold() == null) {
-			final Boolean fontBold = (Boolean) prptFormat.getStyleProperty(TextStyleKeys.BOLD, null);
+			final Boolean fontBold = (Boolean) styleSheet.getStyleProperty(TextStyleKeys.BOLD, null);
 			saikuFormat.setFontBold(fontBold);
 		} else {
 			prptFormat.setStyleProperty(TextStyleKeys.BOLD, saikuFormat.getFontBold());
 		}
 
 		if (saikuFormat.getFontItalic() == null) {
-			final Boolean fontItalic = (Boolean) prptFormat.getStyleProperty(TextStyleKeys.ITALIC, null);
+			final Boolean fontItalic = (Boolean) styleSheet.getStyleProperty(TextStyleKeys.ITALIC, null);
 			saikuFormat.setFontBold(fontItalic);
 		} else {
 			prptFormat.setStyleProperty(TextStyleKeys.ITALIC, saikuFormat.getFontItalic());
 		}
 
 		if (saikuFormat.getFontUnderline() == null) {
-			final Boolean fontUnderlined = (Boolean) prptFormat.getStyleProperty(TextStyleKeys.UNDERLINED, null);
+			final Boolean fontUnderlined = (Boolean) styleSheet.getStyleProperty(TextStyleKeys.UNDERLINED, null);
 			saikuFormat.setFontUnderline(fontUnderlined);
 		} else {
 			prptFormat.setStyleProperty(TextStyleKeys.UNDERLINED, saikuFormat.getFontUnderline());
 		}
 
 		if (saikuFormat.getHorizontalAlignment() == null) {
-			final ElementAlignment horz = (ElementAlignment) prptFormat.getStyleProperty(ElementStyleKeys.ALIGNMENT, null);
+			final ElementAlignment horz = (ElementAlignment) styleSheet.getStyleProperty(ElementStyleKeys.ALIGNMENT, null);
 			saikuFormat.setHorizontalAlignment(horz);
 		} else {
 			prptFormat.setStyleProperty(ElementStyleKeys.ALIGNMENT,saikuFormat.getHorizontalAlignment());
 		}
 
 		if (saikuFormat.getVerticalAlignment() == null) {
-			final ElementAlignment vert = (ElementAlignment) prptFormat.getStyleProperty(ElementStyleKeys.VALIGNMENT, null);
+			final ElementAlignment vert = (ElementAlignment) styleSheet.getStyleProperty(ElementStyleKeys.VALIGNMENT, null);
 			saikuFormat.setVerticalAlignment(vert);
 		} else {
 			prptFormat.setStyleProperty(ElementStyleKeys.VALIGNMENT,saikuFormat.getVerticalAlignment());
 		}
 
 		if (saikuFormat.getFontSize() == null) {
-			final Integer size = (Integer) prptFormat.getStyleProperty(TextStyleKeys.FONTSIZE, null);
+			final Integer size = (Integer) styleSheet.getStyleProperty(TextStyleKeys.FONTSIZE, null);
 			if(size != null) saikuFormat.setFontSize(size.intValue());
 		} else {
 			prptFormat.setStyleProperty(TextStyleKeys.FONTSIZE, new Integer(saikuFormat.getFontSize()));

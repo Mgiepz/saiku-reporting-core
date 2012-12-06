@@ -30,7 +30,7 @@ public class SaikuReportProcessor {
 	/**
 	 * This method applies a ReportSpecification (The Saiku-Layout-Model)
 	 * to a prpt template and lets the Pentaho-Reporting-Engine run the
-	 * SaikuReportPreProcessor. The Result is new MasterReport, that has 
+	 * SaikuReportPreProcessor. The Result is a new MasterReport, that has 
 	 * the Layout described in the Saiku-Layout-Model
 	 * 
 	 * @param template
@@ -98,6 +98,8 @@ public class SaikuReportProcessor {
 			//TemplateUtils.mergePageSetup(model, output);
 
 			ensureSaikuReportPreProcessorIsRemoved(output);
+			
+			GenerateTest.storeReport(output);
 			
 			return output;
 

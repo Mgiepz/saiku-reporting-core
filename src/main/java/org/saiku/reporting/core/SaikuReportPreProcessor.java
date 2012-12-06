@@ -23,6 +23,7 @@ import org.saiku.reporting.core.builder.PageHeaderBuilder;
 import org.saiku.reporting.core.builder.RelationalGroupBuilder;
 import org.saiku.reporting.core.builder.ReportFooterBuilder;
 import org.saiku.reporting.core.builder.ReportHeaderBuilder;
+import org.saiku.reporting.core.builder.SimpleCrosstabBuilder;
 import org.saiku.reporting.core.builder.TableBuilder;
 import org.saiku.reporting.core.model.ReportSpecification;
 
@@ -98,7 +99,7 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 		relationalGroupBuilder.build();
 		
 		if(SaikuReportPreProcessorUtil.isCrosstab(reportSpecification)){	
-			CrosstabBuilder tableBuilder = new CrosstabBuilder(attributeContext, definition, flowController, reportSpecification);
+			SimpleCrosstabBuilder tableBuilder = new SimpleCrosstabBuilder(attributeContext, definition, flowController, reportSpecification);
 			tableBuilder.build();				
 		}
 		else{

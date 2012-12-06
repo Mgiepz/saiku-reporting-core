@@ -3,6 +3,9 @@
  */
 package org.saiku.reporting.core.builder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.reporting.engine.classic.core.AbstractReportDefinition;
@@ -10,11 +13,14 @@ import org.pentaho.reporting.engine.classic.core.AttributeNames;
 import org.pentaho.reporting.engine.classic.core.Band;
 import org.pentaho.reporting.engine.classic.core.Element;
 import org.pentaho.reporting.engine.classic.core.ReportElement;
+import org.pentaho.reporting.engine.classic.core.layout.style.SimpleStyleSheet;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.style.ElementStyleKeys;
+import org.pentaho.reporting.engine.classic.core.style.resolver.SimpleStyleResolver;
 import org.pentaho.reporting.engine.classic.core.wizard.AutoGeneratorUtility;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
 import org.pentaho.reporting.libraries.base.util.StringUtils;
+import org.saiku.reporting.core.model.ElementFormat;
 import org.saiku.reporting.core.model.FieldDefinition;
 import org.saiku.reporting.core.model.ReportSpecification;
 
@@ -50,6 +56,8 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 				return;
 			}
 
+			//The Details Field
+			
 			final Element detailElement = AutoGeneratorUtility.generateDetailsElement(field.getId(),
 					ReportBuilderUtil.computeElementType(field.getId(), flowController));
 			ReportBuilderUtil.setupDefaultGrid(itemBand, detailElement);
@@ -76,6 +84,25 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 			detailElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass);
 			detailElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid);
 			
+			
+			ElementFormat format = null;
+			
+			HashMap<String, ElementFormat> m = field.getElementFormats().get("*");
+			if(m==null){
+				format	= new ElementFormat();
+				m = new HashMap<String, ElementFormat>();
+				m.put("*", format);
+				field.getElementFormats().put("*",m);
+			}else{
+				format = m.get("*");
+				if(format==null){
+					format	= new ElementFormat();
+					m.put("*", format);
+				}
+			}
+
+			MergeFormatUtil.mergeElementFormats(detailElement, format);
+
 			itemBand.addElement(detailElement);
 
 			if (Boolean.TRUE.equals(field.isHideRepeating())) {
@@ -83,6 +110,8 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 						Boolean.TRUE);
 			}
 
+			//The Details Header
+			
 			if (detailsHeader != null) {
 				final Element headerElement = AutoGeneratorUtility.generateHeaderElement(field.getId());
 				ReportBuilderUtil.setupDefaultGrid(detailsHeader, headerElement);
@@ -103,6 +132,8 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 
 				detailsHeader.addElement(headerElement);
 			}
+			
+			//The Details Footer
 
 			if (detailsFooter != null) {
 				final Class aggFunctionClass = field.getAggregationFunction().getClassObject();
