@@ -62,14 +62,14 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 
 	public MasterReport performPreProcessing(final MasterReport definition,
 			final DefaultFlowController flowController)
-	throws ReportProcessingException
-	{
-//		ResourceManager resourceManager = definition.getResourceManager();
-//		this.reportSpecification = SaikuReportPreProcessorUtil.loadReportSpecification(definition, resourceManager);
-//		if (reportSpecification == null)
-//		{
-//			return definition;
-//		}
+					throws ReportProcessingException
+					{
+		//		ResourceManager resourceManager = definition.getResourceManager();
+		//		this.reportSpecification = SaikuReportPreProcessorUtil.loadReportSpecification(definition, resourceManager);
+		//		if (reportSpecification == null)
+		//		{
+		//			return definition;
+		//		}
 
 		final StructureFunction[] functions = definition.getStructureFunctions();
 		boolean hasOverrideFunction = false;
@@ -92,12 +92,12 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 		this.flowController = flowController;
 		this.attributeContext = new DefaultDataAttributeContext(reportContext.getOutputProcessorMetaData(),
 				reportContext.getResourceBundleFactory().getLocale());
-		
+
 		RelationalGroupBuilder relationalGroupBuilder = 
-			new RelationalGroupBuilder(attributeContext, definition, flowController, reportSpecification);
-		
+				new RelationalGroupBuilder(attributeContext, definition, flowController, reportSpecification);
+
 		relationalGroupBuilder.build();
-		
+
 		if(SaikuReportPreProcessorUtil.isCrosstab(reportSpecification)){	
 			SimpleCrosstabBuilder tableBuilder = new SimpleCrosstabBuilder(attributeContext, definition, flowController, reportSpecification);
 			tableBuilder.build();				
@@ -106,34 +106,34 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 			TableBuilder tableBuilder = new TableBuilder(attributeContext, definition, flowController, reportSpecification);
 			tableBuilder.build();
 		}
-		
+
 		ReportHeaderBuilder headerBuilder = new ReportHeaderBuilder(attributeContext, definition, flowController, reportSpecification);
 		headerBuilder.build();		
-		
+
 		AbstractBuilder footerBuilder = new ReportFooterBuilder(attributeContext, definition, flowController, reportSpecification);
 		footerBuilder.build();			
 
 		PageHeaderBuilder pageHeaderBuilder = new PageHeaderBuilder(attributeContext, definition, flowController, reportSpecification);
 		pageHeaderBuilder.build();		
-		
+
 		PageFooterBuilder pageFooterBuilder = new PageFooterBuilder(attributeContext, definition, flowController, reportSpecification);
 		pageFooterBuilder.build();	
 
 		return definition;
-	}
+					}
 
 	public SubReport performPreProcessing(final SubReport definition,
 			final DefaultFlowController flowController)
-	throws ReportProcessingException
-	{
+					throws ReportProcessingException
+					{
 		return null;
-	}
+					}
 
-	public Object clone()
+	public ReportPreProcessor clone()
 	{
 		try
 		{
-			return super.clone();
+			return (ReportPreProcessor) super.clone();
 		}
 		catch (CloneNotSupportedException e)
 		{
