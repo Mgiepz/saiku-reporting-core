@@ -1,6 +1,7 @@
 package org.saiku.reporting.core.builder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -25,6 +26,7 @@ import org.pentaho.reporting.engine.classic.core.ReportProcessingException;
 import org.pentaho.reporting.engine.classic.core.SubGroupBody;
 import org.pentaho.reporting.engine.classic.core.filter.types.LabelType;
 import org.pentaho.reporting.engine.classic.core.filter.types.NumberFieldType;
+import org.pentaho.reporting.engine.classic.core.function.TotalGroupSumFunction;
 import org.pentaho.reporting.engine.classic.core.metadata.ElementType;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.style.BandStyleKeys;
@@ -33,6 +35,7 @@ import org.pentaho.reporting.engine.classic.core.style.TextStyleKeys;
 import org.pentaho.reporting.engine.classic.core.wizard.AutoGeneratorUtility;
 import org.pentaho.reporting.engine.classic.core.wizard.DataAttributes;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
+import org.saiku.reporting.core.model.ElementFormat;
 import org.saiku.reporting.core.model.FieldDefinition;
 import org.saiku.reporting.core.model.GroupDefinition;
 import org.saiku.reporting.core.model.ReportSpecification;
@@ -41,13 +44,13 @@ import org.saiku.reporting.core.model.types.GroupType;
 
 public class SimpleCrosstabBuilder extends AbstractBuilder {
 
+	
+
 	public SimpleCrosstabBuilder(DefaultDataAttributeContext attributeContext, AbstractReportDefinition definition,
 			DefaultFlowController flowController, ReportSpecification reportSpecification) {
 		super(attributeContext, definition, flowController, reportSpecification);
 	}
 
-	private static final String RPT_DETAILS = "rpt-dtl-";
-	
 	private static final Log logger = LogFactory.getLog(SimpleCrosstabBuilder.class);
 
 	private static Element createLabel(final String text)
@@ -94,7 +97,7 @@ public class SimpleCrosstabBuilder extends AbstractBuilder {
 		return element;
 	}
 
-	private CrosstabCell createCell(final String group)
+	private CrosstabCell createCell(final String aggregationGroup, String colGroup, String rowGroup)
 	{
 		final CrosstabCell cell = new CrosstabCell();
 		cell.getStyle().setStyleProperty(ElementStyleKeys.MIN_HEIGHT, -100f);
@@ -105,11 +108,33 @@ public class SimpleCrosstabBuilder extends AbstractBuilder {
 		int i = 0;
 		for (FieldDefinition fieldDefinition : fields) {
 			
-			String uid = RPT_DETAILS + i;
+			//jetzt noch aus den field definition
+			String uid = RPT_DETAILS + i + "-" + colGroup + "-" + rowGroup;
 			String htmlClass = "saiku " + uid;
 
-			Element fieldItem = createFieldItem(fieldDefinition.getId(), group, fieldDefinition.getAggregationFunction().getClass());
 
+			//Element fieldItem = createFieldItem(fieldDefinition.getId(), group, fieldDefinition.getAggregationFunction().getClass());
+			Element fieldItem = createFieldItem(fieldDefinition.getId(), aggregationGroup, TotalGroupSumFunction.class);
+			
+			ElementFormat format = null;
+			
+			HashMap<String, ElementFormat> m = fieldDefinition.getElementFormats().get(colGroup);
+			if(m==null){
+				format	= new ElementFormat();
+				m = new HashMap<String, ElementFormat>();
+				m.put(rowGroup, format);
+				fieldDefinition.getElementFormats().put(colGroup,m);
+			}else{
+				format = m.get(rowGroup);
+				if(format==null){
+					format	= new ElementFormat();
+					m.put(rowGroup, format);
+				}
+			}
+
+			MergeFormatUtil.mergeElementFormats(fieldItem, format);
+			
+			
 			fieldItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass);
 			fieldItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid);
 			
@@ -126,7 +151,7 @@ public class SimpleCrosstabBuilder extends AbstractBuilder {
 		 * Generate the Details-Row
 		 */
 		final CrosstabCellBody cellBody = new CrosstabCellBody();
-		cellBody.addElement(createCell(null));
+		cellBody.addElement(createCell(null,INNERMOST,INNERMOST));
 
 		GroupBody body = cellBody;
 
@@ -151,20 +176,73 @@ public class SimpleCrosstabBuilder extends AbstractBuilder {
 			    3) Summary Header
 				 */
 				final List<RootBandFormat> headerFormats = colGrp.getHeaderFormats();
-		
+
+				int index = groupDefinitions.indexOf(colGrp);
+				String uid = RPT_GROUP_HEADER + index;
+				String htmlClass = "saiku " + uid;
+
+				RootBandFormat headerFormat = null; 
+				
+				if(headerFormats.size() < 1 || headerFormats.get(0)==null){
+					headerFormat=new RootBandFormat();
+					headerFormats.add(0, headerFormat);
+				}else{
+					headerFormat = headerFormats.get(0);
+				}
+				
+				Element headerItem = createFieldItem(colGrp.getFieldId());
+				
+				//MergeFormatUtil.mergeElementFormats(headerItem, headerFormat);
+				MergeFormatUtil.mergeElementFormats(columnGroup.getHeader(), headerFormat);
+				
+				headerItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass + "-0");
+				headerItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid + "-0");
+				columnGroup.getHeader().addElement(headerItem);
 				columnGroup.getHeader().getStyle().setStyleProperty(ElementStyleKeys.MIN_HEIGHT, -100f);
 				columnGroup.getHeader().getStyle().setStyleProperty(TextStyleKeys.BOLD, Boolean.TRUE);
-				columnGroup.getHeader().addElement(createFieldItem(colGrp.getFieldId()));
+				
+				RootBandFormat titleFormat = null; 
+				
+				if(headerFormats.size() < 2 || headerFormats.get(1)==null){
+					titleFormat=new RootBandFormat();
+					headerFormats.add(1, titleFormat);
+				}else{
+					titleFormat = headerFormats.get(1);
+				}
+
+				String titleLabel = titleFormat.getLabel()!=null ? titleFormat.getLabel() : colGrp.getDisplayName();
+				Element titleItem = createLabel(titleLabel);
+				
+				MergeFormatUtil.mergeElementFormats(titleItem, titleFormat);
+							
+				titleItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass + "-1");
+				titleItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid + "-1");
+				columnGroup.getTitleHeader().addElement(titleItem);
 				columnGroup.getTitleHeader().getStyle().setStyleProperty(ElementStyleKeys.MIN_HEIGHT, -100f);
-				columnGroup.getTitleHeader().addElement(createLabel(colGrp.getDisplayName()));
+				
+				RootBandFormat summaryFormat = null; 
+				
+				if(headerFormats.size() < 3 || headerFormats.get(2)==null){
+					summaryFormat=new RootBandFormat();
+					headerFormats.add(1, summaryFormat);
+				}else{
+					summaryFormat = headerFormats.get(2);
+				}
+
+				String summaryLabel = summaryFormat.getLabel()!=null?summaryFormat.getLabel():"Total";
+				Element summaryItem = createLabel(summaryLabel);
+				
+				MergeFormatUtil.mergeElementFormats(summaryItem, summaryFormat);				
+				
+				summaryItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass + "-2");
+				summaryItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid + "-2");				
+				columnGroup.getSummaryHeader().addElement(summaryItem);
 				columnGroup.getSummaryHeader().getStyle().setStyleProperty(ElementStyleKeys.MIN_HEIGHT, -100f);
-				//columnGroup.getSummaryHeader().addElement(createLabel(colGrp.getFieldId()));
-				columnGroup.getSummaryHeader().addElement(createLabel("Total"));
 				
 				if(colGrp.isPrintSummary()){
 					//create cell needs to be enhanced later to always pick the correct group combination for the
 					//element formats
-					final CrosstabCell cell = createCell("Group " + colGrp.getFieldId());
+					final CrosstabCell cell = createCell("Group " + colGrp.getFieldId(), colGrp.getFieldId(), INNERMOST);
 					cell.setColumnField(colGrp.getFieldId());
 					cell.setName(colGrp.getFieldId());
 					cellBody.addElement(cell);				
@@ -182,21 +260,78 @@ public class SimpleCrosstabBuilder extends AbstractBuilder {
 	    	final GroupDefinition rowGrp = rowGrpItr.previous();
 			if(rowGrp.getType().equals(GroupType.CT_ROW)){
 				final CrosstabRowGroup rowGroup = new CrosstabRowGroup(body);
+				
+				int index = groupDefinitions.indexOf(rowGrp);
+				String uid = RPT_GROUP_HEADER + index;
+				String htmlClass = "saiku " + uid;
+				
 				rowGroup.setName("Group " +  rowGrp.getGroupName());
 				rowGroup.setField(rowGrp.getFieldId());
+				
+				final List<RootBandFormat> headerFormats = rowGrp.getHeaderFormats();
+
+				RootBandFormat headerFormat = null; 
+				
+				if(headerFormats.size() < 1 || headerFormats.get(0)==null){
+					headerFormat=new RootBandFormat();
+					headerFormats.add(0, headerFormat);
+				}else{
+					headerFormat = headerFormats.get(0);
+				}
+			
+				Element headerItem = createFieldItem(rowGrp.getFieldId());
+				
+				//MergeFormatUtil.mergeElementFormats(headerItem, headerFormat);
+				MergeFormatUtil.mergeElementFormats(rowGroup.getHeader(), headerFormat);
+				
+				headerItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass + "-0");
+				headerItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid + "-0");
+				
 				rowGroup.getHeader().getStyle().setStyleProperty(ElementStyleKeys.MIN_HEIGHT, -100f);
 				rowGroup.getHeader().getStyle().setStyleProperty(TextStyleKeys.BOLD, Boolean.TRUE);
-				rowGroup.getHeader().addElement(createFieldItem(rowGrp.getFieldId()));
+				rowGroup.getHeader().addElement(headerItem);
+				
+				RootBandFormat titleFormat = null; 
+				
+				if(headerFormats.size() < 2 || headerFormats.get(1)==null){
+					titleFormat=new RootBandFormat();
+					headerFormats.add(1, titleFormat);
+				}else{
+					titleFormat = headerFormats.get(1);
+				}
+				
+				String titleLabel = titleFormat.getLabel()!=null ? titleFormat.getLabel() : rowGrp.getDisplayName();
+				Element titleItem = createLabel(titleLabel);
+				
+				MergeFormatUtil.mergeElementFormats(titleItem, titleFormat);
 
+				titleItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass + "-1");
+				titleItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid + "-1");
+				
 				rowGroup.getTitleHeader().getStyle().setStyleProperty(ElementStyleKeys.MIN_HEIGHT, -100f);
-				rowGroup.getTitleHeader().addElement(createLabel(rowGrp.getDisplayName()));
+				rowGroup.getTitleHeader().addElement(titleItem);
+				
+				RootBandFormat summaryFormat = null; 
+				
+				if(headerFormats.size() < 3 || headerFormats.get(2)==null){
+					summaryFormat=new RootBandFormat();
+					headerFormats.add(1, summaryFormat);
+				}else{
+					summaryFormat = headerFormats.get(2);
+				}
+				
+				String summaryLabel = summaryFormat.getLabel()!=null?summaryFormat.getLabel():"Total";
+				Element summaryItem = createLabel(summaryLabel);
+				
+				MergeFormatUtil.mergeElementFormats(summaryItem, summaryFormat);
 
+				summaryItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass + "-2");
+				summaryItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid + "-2");	
 				rowGroup.getSummaryHeader().getStyle().setStyleProperty(ElementStyleKeys.MIN_HEIGHT, -100f);
-				//rowGroup.getSummaryHeader().addElement(createLabel(rowGrp.getFieldId()));
-				rowGroup.getSummaryHeader().addElement(createLabel("Total"));
+				rowGroup.getSummaryHeader().addElement(summaryItem);
 				
 				if(rowGrp.isPrintSummary()){
-					final CrosstabCell cell = createCell("Group " + rowGroup.getField());
+					final CrosstabCell cell = createCell("Group " + rowGroup.getField(), INNERMOST, rowGrp.getFieldId());
 					cell.setRowField(rowGrp.getFieldId());
 					cell.setName(rowGrp.getFieldId());
 					cellBody.addElement(cell);
@@ -208,7 +343,7 @@ public class SimpleCrosstabBuilder extends AbstractBuilder {
 						if(colGrp.getType().equals(GroupType.CT_COLUMN)){
 							if (colGrp.isPrintSummary())
 							{
-								final CrosstabCell crosstabCell = createCell("Group " + rowGroup.getField());
+								final CrosstabCell crosstabCell = createCell("Group " + rowGroup.getField(), colGrp.getFieldId(), rowGrp.getFieldId());
 								crosstabCell.setColumnField(colGrp.getFieldId());
 								crosstabCell.setRowField(rowGrp.getFieldId());
 								crosstabCell.setName(colGrp.getFieldId() + "," + rowGroup.getField());

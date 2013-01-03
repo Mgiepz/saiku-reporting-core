@@ -8,8 +8,8 @@
 	<packaging>jar</packaging>
 	
 	<properties>
-		<pentaho.libs.version>TRUNK-SNAPSHOT</pentaho.libs.version>
-		<pentaho.reporting.version>TRUNK-SNAPSHOT</pentaho.reporting.version>
+		<pentaho.libs.version>TRUNK-SNAPSHOT-SAIKU</pentaho.libs.version>
+		<pentaho.reporting.version>TRUNK-SNAPSHOT-SAIKU</pentaho.reporting.version>
 	</properties>
 	
 	<repositories>

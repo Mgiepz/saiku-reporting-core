@@ -104,7 +104,7 @@ public class SaikuReportProcessor {
 			return output;
 
 		}catch(Exception e){
-			//TODO:
+			e.printStackTrace();
 		}
 		finally {
 			if(dataFactory!=null){

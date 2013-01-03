@@ -22,11 +22,10 @@ import org.pentaho.reporting.engine.classic.core.style.ElementStyleKeys;
 import org.pentaho.reporting.engine.classic.core.wizard.AutoGeneratorUtility;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
 import org.pentaho.reporting.libraries.base.util.StringUtils;
-import org.saiku.reporting.core.SaikuReportPreProcessorUtil;
+import org.saiku.reporting.core.model.FieldDefinition;
 import org.saiku.reporting.core.model.GroupDefinition;
 import org.saiku.reporting.core.model.ReportSpecification;
 import org.saiku.reporting.core.model.RootBandFormat;
-import org.saiku.reporting.core.model.FieldDefinition;
 import org.saiku.reporting.core.model.types.GroupType;
 
 public class RelationalGroupBuilder extends AbstractBuilder{
@@ -174,6 +173,13 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 			headerMessageElement.setAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.VALUE,
 					value);
 
+			String uid = RPT_GROUP_HEADER + index + "-0"; //relational group has only one header
+
+			String htmlClass = "saiku " + uid;
+			
+			headerMessageElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass);
+			headerMessageElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid);
+			
 			headerElement.addElement(headerMessageElement);
 			
 			content.clear();
@@ -253,27 +259,8 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 //		return relationalGroups.toArray(new RelationalGroup[relationalGroups.size()]);
 //	}
 //	
+
 	protected void configureRelationalGroupFooter(final RelationalGroup group, final GroupDefinition groupDefinitionDefinition, final int index)
-	throws ReportProcessingException {
-
-		final RootBandFormat footerDefinition = groupDefinitionDefinition.getFooterFormat();
-		if (footerDefinition.isVisible())
-		{
-			return;
-		}
-		
-		if(SaikuReportPreProcessorUtil.isCrosstab(reportSpecification)){	
-			//funktioniert wie der original wizard
-			setupCrosstabOuterGroupFooter(group, groupDefinitionDefinition, index);
-		}
-		else{
-			//funktioniert genauso wie das alte Saiku adhoc
-			setupRelationalGroupFooter(group, groupDefinitionDefinition, index);
-
-		}
-	}
-	
-	protected void setupRelationalGroupFooter(final RelationalGroup group, final GroupDefinition groupDefinitionDefinition, final int index)
 	throws ReportProcessingException {
 
 		final RootBandFormat footerDefinition = groupDefinitionDefinition.getFooterFormat();
@@ -301,74 +288,7 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 		}
 
 	}
-	
-	
-	
-	protected void setupCrosstabOuterGroupFooter(final RelationalGroup group, final GroupDefinition groupDefinitionDefinition, final int index)
-	throws ReportProcessingException
-	{
-//		final RootBandFormat footerDefinition = groupDefinitionDefinition.getFooterFormat();
-//		if (footerDefinition.isVisible() == false)
-//		{
-//			return;
-//		}
-//
-//		if (groupDefinitionDefinition.getAggregationFunction() == null && (groupDefinitionDefinition.getGroupTotalsLabel() == null || groupDefinitionDefinition.getGroupTotalsLabel().length() == 0))
-//		{
-//			return;
-//		}
-//
-//		final GroupFooter footer = group.getFooter();
-//		final Boolean repeat = footerDefinition.getRepeat();
-//		if (repeat != null)
-//		{
-//			footer.setRepeat(repeat.booleanValue());
-//		}
-//
-//		final Band content = AutoGeneratorUtility.findGeneratedContent(footer);
-//		if (content == null)
-//		{
-//			return;
-//		}
-//
-//		final Class aggFunctionClass = groupDefinitionDefinition.getAggregationFunction();
-//		final Element footerValueElement = AutoGeneratorUtility.generateFooterElement
-//		(aggFunctionClass, ReportBuilderUtil.computeElementType(groupDefinitionDefinition, flowController),
-//				groupDefinitionDefinition.getGroupName(), groupDefinitionDefinition.getFieldId());
-//
-//		final Element footerLabelElement = new Element();
-//		footerLabelElement.setElementType(new LabelType());
-//		if (groupDefinitionDefinition.getGroupTotalsLabel() != null)
-//		{
-//			footerLabelElement.setAttribute
-//			(AttributeNames.Core.NAMESPACE, AttributeNames.Core.VALUE, groupDefinitionDefinition.getGroupTotalsLabel());
-//		}
-//		else
-//		{
-//			footerLabelElement.setAttribute
-//			(AttributeNames.Core.NAMESPACE, AttributeNames.Core.VALUE, groupDefinitionDefinition.getFieldId());
-//			footerLabelElement.setAttribute
-//			(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.LABEL_FOR, groupDefinitionDefinition.getFieldId());
-//			footerLabelElement.setAttribute(AttributeNames.Wizard.NAMESPACE,
-//					AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES, Boolean.TRUE);
-//		}
-//
-//		final Band footerElement = new Band();
-//		footerElement.getStyle().setStyleProperty(BandStyleKeys.LAYOUT, BandStyleKeys.LAYOUT_INLINE);
-//		footerElement.getStyle().setStyleProperty(ElementStyleKeys.MIN_WIDTH, new Float(-100));
-//		footerElement.getStyle().setStyleProperty(ElementStyleKeys.DYNAMIC_HEIGHT, Boolean.TRUE);
-//		footerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.ALLOW_METADATA_STYLING,
-//				Boolean.TRUE);
-//		footerElement.setAttribute
-//		(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.LABEL_FOR, groupDefinitionDefinition.getFieldId());
-//		footerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.CACHED_WIZARD_FORMAT_DATA, footerDefinition);
-//		footerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.CACHED_WIZARD_FIELD_DATA, groupDefinitionDefinition);
-//		footerElement.addElement(footerLabelElement);
-//		footerElement.addElement(footerValueElement);
-//
-//		content.clear();
-//		content.addElement(footerElement);
-		}
+
 	
 	protected void setupGroupsummaryField(final Band groupSummaryBand, final FieldDefinition field, final float width,
 			final int fieldIdx) throws ReportProcessingException {

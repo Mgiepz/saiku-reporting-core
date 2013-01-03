@@ -4,7 +4,6 @@
 package org.saiku.reporting.core.builder;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,10 +12,8 @@ import org.pentaho.reporting.engine.classic.core.AttributeNames;
 import org.pentaho.reporting.engine.classic.core.Band;
 import org.pentaho.reporting.engine.classic.core.Element;
 import org.pentaho.reporting.engine.classic.core.ReportElement;
-import org.pentaho.reporting.engine.classic.core.layout.style.SimpleStyleSheet;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.style.ElementStyleKeys;
-import org.pentaho.reporting.engine.classic.core.style.resolver.SimpleStyleResolver;
 import org.pentaho.reporting.engine.classic.core.wizard.AutoGeneratorUtility;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
 import org.pentaho.reporting.libraries.base.util.StringUtils;
@@ -30,26 +27,12 @@ import org.saiku.reporting.core.model.ReportSpecification;
  */
 public class DetailsFieldBuilder extends AbstractBuilder{
 	
-	private static final String RPT_DETAILS = "rpt-dtl-";
-
 	public DetailsFieldBuilder(DefaultDataAttributeContext attributeContext, AbstractReportDefinition definition,
 			DefaultFlowController flowController, ReportSpecification reportSpecification) {
 		super(attributeContext, definition, flowController, reportSpecification);
 	}
 
 	private static final Log logger = LogFactory.getLog(DetailsFieldBuilder.class);
-
-//	public static Element build(String fieldId, ElementType computeElementType) {
-//		   final Element detailsElement = new Element();
-//		    detailsElement.getStyle().setStyleProperty(ElementStyleKeys.DYNAMIC_HEIGHT, Boolean.TRUE);
-//		    detailsElement.setElementType(computeElementType);
-//		    detailsElement.setAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.FIELD, fieldId);
-//		    detailsElement.setAttribute(AttributeNames.Wizard.NAMESPACE,
-//		        AttributeNames.Wizard.ALLOW_METADATA_STYLING, Boolean.TRUE);
-//		    detailsElement.setAttribute(AttributeNames.Wizard.NAMESPACE,
-//		        AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES, Boolean.TRUE);
-//		    return detailsElement;
-//	}
 
 	public void build(Band detailsHeader, Band detailsFooter, Band itemBand, FieldDefinition field, float width, int j) {
 			if (StringUtils.isEmpty(field.getId())) {
@@ -77,6 +60,11 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 				detailElement.setAttribute(AttributeNames.Wizard.NAMESPACE, "CachedWizardFieldData", field);
 			}
 			
+			detailElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.ALLOW_METADATA_STYLING,
+					false);
+			detailElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES,
+					false);
+			
 			String uid = RPT_DETAILS + j;
 
 			String htmlClass = "saiku " + uid;
@@ -84,20 +72,19 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 			detailElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass);
 			detailElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid);
 			
-			
 			ElementFormat format = null;
 			
-			HashMap<String, ElementFormat> m = field.getElementFormats().get("*");
+			HashMap<String, ElementFormat> m = field.getElementFormats().get(INNERMOST);
 			if(m==null){
 				format	= new ElementFormat();
 				m = new HashMap<String, ElementFormat>();
-				m.put("*", format);
-				field.getElementFormats().put("*",m);
+				m.put(INNERMOST, format);
+				field.getElementFormats().put(INNERMOST,m);
 			}else{
-				format = m.get("*");
+				format = m.get(INNERMOST);
 				if(format==null){
 					format	= new ElementFormat();
-					m.put("*", format);
+					m.put(INNERMOST, format);
 				}
 			}
 
@@ -129,7 +116,23 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 						false);
 				headerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES,
 						false);
+				
+				String hdUid = RPT_DETAILS_HEADER + j;
 
+				String hdHtmlClass = "saiku " + hdUid;
+				
+				headerElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, hdHtmlClass);
+				headerElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, hdUid);
+
+				ElementFormat headerFormat = field.getHeaderFormat();
+
+				if(headerFormat==null){
+					headerFormat = new ElementFormat();
+					field.setHeaderFormat(headerFormat);
+				}
+				
+				MergeFormatUtil.mergeElementFormats(headerElement, headerFormat);
+				
 				detailsHeader.addElement(headerElement);
 			}
 			

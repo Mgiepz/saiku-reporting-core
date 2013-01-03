@@ -23,7 +23,7 @@ import org.saiku.reporting.core.model.ReportSpecification;
  * @author mg
  *
  */
-public abstract class AbstractBuilder {
+public abstract class AbstractBuilder implements LayoutConstants{
 
 	public AbstractBuilder(DefaultDataAttributeContext attributeContext, AbstractReportDefinition definition,
 			DefaultFlowController flowController, ReportSpecification reportSpecification) {

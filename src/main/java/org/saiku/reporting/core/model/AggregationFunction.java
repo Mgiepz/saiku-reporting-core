@@ -4,6 +4,7 @@ public enum AggregationFunction implements AggregationClassMapper {
 	
 	NONE(null),
 	SUM("org.pentaho.reporting.engine.classic.core.function.ItemSumFunction"),
+	GROUPSUM("org.pentaho.reporting.engine.classic.core.function.TotalGroupSumFunction"),
 	AVERAGE("org.pentaho.reporting.engine.classic.core.function.ItemAvgFunction"),
 	COUNT("org.pentaho.reporting.engine.classic.core.function.ItemCountFunction"),
 	COUNT_DISTINCT("org.pentaho.reporting.engine.classic.core.function.CountDistinctFunction"),
