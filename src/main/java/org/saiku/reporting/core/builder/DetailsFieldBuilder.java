@@ -65,7 +65,7 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 			detailElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES,
 					false);
 			
-			String uid = RPT_DETAILS + j;
+			String uid = RPT_DETAILS + j   + "-" + INNERMOST + "-" + INNERMOST;
 
 			String htmlClass = "saiku " + uid;
 			
@@ -119,7 +119,7 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 				
 				String hdUid = RPT_DETAILS_HEADER + j;
 
-				String hdHtmlClass = "saiku " + hdUid;
+				String hdHtmlClass = "saiku col-header " + hdUid;
 				
 				headerElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, hdHtmlClass);
 				headerElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, hdUid);

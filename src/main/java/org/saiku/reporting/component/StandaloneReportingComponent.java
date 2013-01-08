@@ -8,22 +8,15 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.pentaho.reporting.engine.classic.core.AttributeNames;
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.metadata.ReportProcessTaskRegistry;
 import org.pentaho.reporting.engine.classic.core.modules.output.pageable.pdf.PdfPageableModule;
-import org.pentaho.reporting.engine.classic.core.modules.output.pageable.plaintext.PlainTextPageableModule;
-import org.pentaho.reporting.engine.classic.core.modules.output.pageable.xml.XmlPageableModule;
-import org.pentaho.reporting.engine.classic.core.modules.output.table.csv.CSVTableModule;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.html.HtmlTableModule;
-import org.pentaho.reporting.engine.classic.core.modules.output.table.rtf.RTFTableModule;
-import org.pentaho.reporting.engine.classic.core.modules.output.table.xls.ExcelTableModule;
-import org.pentaho.reporting.engine.classic.core.modules.output.table.xml.XmlTableModule;
 import org.pentaho.reporting.engine.classic.core.parameters.DefaultParameterContext;
-import org.pentaho.reporting.engine.classic.core.parameters.ParameterContext;
 import org.pentaho.reporting.engine.classic.core.parameters.ValidationResult;
 import org.pentaho.reporting.libraries.base.config.Configuration;
+import org.saiku.reporting.component.output.PDFOutput;
 import org.saiku.reporting.component.output.PageableHTMLOutput;
 import org.saiku.reporting.component.output.ReportOutputHandler;
 
@@ -288,38 +281,38 @@ public class StandaloneReportingComponent implements IReportingComponent
 		}
 		return defaultValue;
 	}
-	
-	  protected ReportOutputHandler createOutputHandlerForOutputType(final String outputType) throws IOException
-	  {
-		  
-		//TODO: For now we dont cache the outputhandler  
-	    final ReportOutputHandler reportOutputHandler;
-	    
-	    if (HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE.equals(outputType))
-	    {
-	      if (dashboardMode)
-	      {
-	        report.getReportConfiguration().setConfigProperty(HtmlTableModule.BODY_FRAGMENT, "true");
-	      }
-			  // don't use the content repository
-			  final Configuration globalConfig = ClassicEngineBoot.getInstance().getGlobalConfig();
-			  
-			  //TODO: for now we dont need url rewriting, only when we use images that are in temp folder
-			  String contentHandlerPattern = null;
 
-			  contentHandlerPattern += (String) getInput(REPORTHTML_CONTENTHANDLER_PATTERN,
-			      globalConfig.getConfigProperty("org.pentaho.web.ContentHandler")); //$NON-NLS-1$
-			  reportOutputHandler = new PageableHTMLOutput(contentHandlerPattern);
-			  
-	    }
-	    else
-	    {
-	      return null;
-	    }
-		
-	    return reportOutputHandler;
-	    
-	  }
+	protected ReportOutputHandler createOutputHandlerForOutputType(final String outputType) throws IOException
+	{
+		//TODO: For now we dont cache the outputhandler  
+		final ReportOutputHandler reportOutputHandler;
+
+		if (HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE.equals(outputType))
+		{
+			if (dashboardMode)
+			{
+				report.getReportConfiguration().setConfigProperty(HtmlTableModule.BODY_FRAGMENT, "true");
+			}
+			// don't use the content repository
+			final Configuration globalConfig = ClassicEngineBoot.getInstance().getGlobalConfig();
+
+			//TODO: for now we dont need url rewriting, only when we use images that are in temp folder
+			String contentHandlerPattern = null;
+
+			contentHandlerPattern += (String) getInput(REPORTHTML_CONTENTHANDLER_PATTERN,
+					globalConfig.getConfigProperty("org.pentaho.web.ContentHandler")); //$NON-NLS-1$
+			reportOutputHandler = new PageableHTMLOutput(contentHandlerPattern);
+
+		}
+		else if (PdfPageableModule.PDF_EXPORT_TYPE.equals(outputType)){
+			reportOutputHandler = new PDFOutput();
+		}
+		else{
+			return null;
+		}
+		//return cache.put(reportCacheKey, reportOutputHandler); <- implement this!
+		return reportOutputHandler;
+	}
 
 	/**
 	 * Static initializer block to guarantee that the ReportingComponent will be in a state where the reporting engine will be booted. We have a system listener
