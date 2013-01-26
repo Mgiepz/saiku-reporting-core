@@ -14,8 +14,10 @@ import org.pentaho.reporting.engine.classic.core.metadata.ReportProcessTaskRegis
 import org.pentaho.reporting.engine.classic.core.modules.output.pageable.pdf.PdfPageableModule;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.html.HtmlTableModule;
 import org.pentaho.reporting.engine.classic.core.parameters.DefaultParameterContext;
+import org.pentaho.reporting.engine.classic.core.parameters.ParameterContext;
 import org.pentaho.reporting.engine.classic.core.parameters.ValidationResult;
 import org.pentaho.reporting.libraries.base.config.Configuration;
+import org.pentaho.reporting.libraries.resourceloader.ResourceException;
 import org.saiku.reporting.component.output.PDFOutput;
 import org.saiku.reporting.component.output.PageableHTMLOutput;
 import org.saiku.reporting.component.output.ReportOutputHandler;
@@ -31,32 +33,6 @@ public class StandaloneReportingComponent implements IReportingComponent
 {
 
 	private static final Log log = LogFactory.getLog(StandaloneReportingComponent.class);
-
-	public static final String OUTPUT_TARGET = "output-target"; //$NON-NLS-1$
-
-	public static final String OUTPUT_TYPE = "output-type"; //$NON-NLS-1$
-	public static final String MIME_TYPE_HTML = "text/html"; //$NON-NLS-1$
-	public static final String MIME_TYPE_EMAIL = "mime-message/text/html"; //$NON-NLS-1$
-	public static final String MIME_TYPE_PDF = "application/pdf"; //$NON-NLS-1$
-	public static final String MIME_TYPE_XLS = "application/vnd.ms-excel"; //$NON-NLS-1$
-	public static final String MIME_TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; //$NON-NLS-1$
-	public static final String MIME_TYPE_RTF = "application/rtf"; //$NON-NLS-1$
-	public static final String MIME_TYPE_CSV = "text/csv"; //$NON-NLS-1$
-	public static final String MIME_TYPE_TXT = "text/plain"; //$NON-NLS-1$
-	public static final String MIME_TYPE_XML = "application/xml"; //$NON-NLS-1$
-	public static final String MIME_TYPE_PNG = "image/png"; //$NON-NLS-1$
-	public static final String XLS_WORKBOOK_PARAM = "workbook"; //$NON-NLS-1$
-	public static final String REPORTLOAD_RESURL = "res-url"; //$NON-NLS-1$
-	public static final String REPORT_DEFINITION_INPUT = "report-definition"; //$NON-NLS-1$
-	public static final String REPORTHTML_CONTENTHANDLER_PATTERN = "content-handler-pattern"; //$NON-NLS-1$
-	public static final String REPORTGENERATE_YIELDRATE = "yield-rate"; //$NON-NLS-1$
-	public static final String ACCEPTED_PAGE = "accepted-page"; //$NON-NLS-1$
-	public static final String PAGINATE_OUTPUT = "paginate"; //$NON-NLS-1$
-	public static final String PRINT = "print"; //$NON-NLS-1$
-	public static final String PRINTER_NAME = "printer-name"; //$NON-NLS-1$
-	public static final String DASHBOARD_MODE = "dashboard-mode"; //$NON-NLS-1$
-	public static final String MIME_GENERIC_FALLBACK = "application/octet-stream"; //$NON-NLS-1$
-	public static final String PNG_EXPORT_TYPE = "pageable/X-AWT-Graphics;image-type=png";
 
 	private String outputType;
 	private String outputTarget;
@@ -322,6 +298,82 @@ public class StandaloneReportingComponent implements IReportingComponent
 	static
 	{
 		ClassicEngineBoot.getInstance().start();
+	}
+
+	@Override
+	public void setForceDefaultOutputTarget(boolean forceDefaultOutputTarget) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public boolean isForceDefaultOutputTarget() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public Serializable getReportFileId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void setReportFileId(Serializable fileId) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public String getMimeType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public boolean isPrint() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public void setPrint(boolean print) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public String getPrinter() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void setPrinter(String printer) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public String getComputedOutputTarget() throws IOException,
+			ResourceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void applyInputsToReportParameters(MasterReport report,
+			ParameterContext context) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	@Deprecated
+	public ValidationResult applyInputsToReportParameters(
+			ParameterContext context, ValidationResult validationResult)
+			throws IOException, ResourceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public boolean outputSupportsPagination() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public int paginate() throws IOException, ResourceException {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
