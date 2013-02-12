@@ -47,7 +47,7 @@ public final class LengthUnit implements Serializable
 	public static final LengthUnit CM = new LengthUnit("cm", 72.0 / 2.54);
 	public static final LengthUnit INCH = new LengthUnit("in", 72);
 
-	@XmlElement(name="dots-per-uni")
+	@XmlElement(name="dots-per-unit")
 	@JsonProperty("dotsPerUnit")
 	private double dotsPerUnit;
 	
