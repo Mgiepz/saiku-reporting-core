@@ -13,7 +13,9 @@ import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriter;
 import org.pentaho.reporting.libraries.resourceloader.Resource;
+import org.pentaho.reporting.libraries.resourceloader.ResourceKey;
 import org.pentaho.reporting.libraries.resourceloader.ResourceManager;
+import org.saiku.reporting.core.SaikuReportingCoreModule;
 import org.saiku.reporting.core.model.FieldDefinition;
 import org.saiku.reporting.core.model.ReportSpecification;
 
@@ -40,7 +42,7 @@ public class ReportReadWriteTest extends TestCase {
 		fieldDefinitions.add(new FieldDefinition());
 		spec.setFieldDefinitions(fieldDefinitions );
 
-		masterReport.setAttribute(AttributeNames.Wizard.NAMESPACE, "saiku-report-spec", spec);
+		masterReport.setAttribute(SaikuReportingCoreModule.NAMESPACE, "saiku-report-spec", spec);
 
 		final ByteArrayOutputStream prptContent = new ByteArrayOutputStream();
 		try {
@@ -48,15 +50,26 @@ public class ReportReadWriteTest extends TestCase {
 			OutputStream outputStream = new FileOutputStream ("c:/tmp/dert.prpt");
 			prptContent.writeTo(outputStream);	
 		
+			outputStream.close();
+			
 			ResourceManager manager = new ResourceManager();
 			manager.registerDefaults();
+			URL keyValue = new URL("file:C:/tmp/dert.prpt");
+			
 			Resource res = manager.createDirectly(
-				new URL("file:C:/tmp/dert.prpt"), MasterReport.class);
+				keyValue, MasterReport.class);
 			MasterReport report = (MasterReport) res.getResource();
 			
-			ReportSpecification spec2 = (ReportSpecification) report.getAttribute(AttributeNames.Wizard.NAMESPACE, "saiku-report-spec");
+			final ResourceKey contentBase = report.getContentBase();
+		    final ResourceKey resourceKey = manager.deriveKey(contentBase, "saiku-report-spec.xml");
+		    final Resource resource = manager.create(resourceKey, contentBase, ReportSpecification.class);
+		    
 			
-			System.out.println(spec2.toString());
+	       // return (ReportSpecification) resource.getResource(); 
+
+			//ReportSpecification spec2 = (ReportSpecification) report.getAttribute(SaikuReportingCoreModule.NAMESPACE, "saiku-report-spec");
+			
+			//System.out.println(spec2.toString());
 			
 			
 		} catch (Exception e) {

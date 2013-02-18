@@ -7,4 +7,6 @@ public interface LayoutConstants {
 	static final String RPT_DETAILS_HEADER = "rpt-dth-";
 	
 	static final String INNERMOST = "x";
+	static final String OUTERMOST = "TOTAL";
+	
 }

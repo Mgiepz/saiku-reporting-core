@@ -20,6 +20,9 @@
 package org.saiku.reporting.core.builder;
 
 import java.awt.Color;
+import java.awt.Insets;
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -28,13 +31,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.reporting.engine.classic.core.Element;
 import org.pentaho.reporting.engine.classic.core.ElementAlignment;
+import org.pentaho.reporting.engine.classic.core.MasterReport;
+import org.pentaho.reporting.engine.classic.core.PageDefinition;
 import org.pentaho.reporting.engine.classic.core.ReportElement;
+import org.pentaho.reporting.engine.classic.core.SimplePageDefinition;
 import org.pentaho.reporting.engine.classic.core.layout.style.SimpleStyleSheet;
 import org.pentaho.reporting.engine.classic.core.style.ElementStyleKeys;
 import org.pentaho.reporting.engine.classic.core.style.ElementStyleSheet;
 import org.pentaho.reporting.engine.classic.core.style.TextStyleKeys;
 import org.pentaho.reporting.engine.classic.core.style.resolver.SimpleStyleResolver;
+import org.pentaho.reporting.engine.classic.core.util.PageFormatFactory;
 import org.saiku.reporting.core.model.ElementFormat;
+import org.saiku.reporting.core.model.PageSetup;
+import org.saiku.reporting.core.model.ReportSpecification;
 
 /**
  * This class is used to extract default formatting for a new element from the
@@ -180,42 +189,44 @@ public class MergeFormatUtil {
 
 	}
 
-//	public static void mergePageSetup(SaikuMasterModel model, MasterReport output) {
-//
-//		Paper paper = null;
-//		SaikuReportSettings settings = model.getSettings();
-//
-//		if (settings.getPageFormat() == null) {
-//			paper = output.getPageDefinition().getPageFormat(0).getPaper();
-//			settings.setPageFormat(PageFormatFactory.getInstance().getPageFormatName(paper.getWidth(), paper.getHeight()));
-//		} else {
-//			paper = PageFormatFactory.getInstance().createPaper(settings.getPageFormat());
-//		}
-//
-//		PageFormat pageFormat = null;
-//		if (settings.getOrientation() == null) {
-//			settings.setOrientation(output.getPageDefinition().getPageFormat(0).getOrientation());
-//			pageFormat = output.getPageDefinition().getPageFormat(0);
-//		} else {
-//			int orientation = settings.getOrientation();
-//			pageFormat = PageFormatFactory.getInstance().createPageFormat(paper, orientation);
-//		}
-//
-//		if (settings.getMarginBottom() == null || settings.getMarginLeft() == null || settings.getMarginRight() == null
-//				|| settings.getMarginTop() == null) {
-//			Insets insets = PageFormatFactory.getInstance().getPageMargins(output.getPageDefinition().getPageFormat(0));
-//			settings.setMarginBottom(insets.bottom);
-//			settings.setMarginLeft(insets.left);
-//			settings.setMarginTop(insets.top);
-//			settings.setMarginRight(insets.right);
-//		} else {
-//			Insets insets = new Insets(settings.getMarginTop(), settings.getMarginLeft(), settings.getMarginBottom(),
-//					settings.getMarginRight());
-//			PageFormatFactory.getInstance().setPageMargins(pageFormat, insets);
-//		}
-//
-//		PageDefinition format = new SimplePageDefinition(pageFormat);
-//		output.setPageDefinition(format);
-//
-//	}
+	public static void mergePageSetup(ReportSpecification model, MasterReport output) {
+
+		Paper paper = null;
+		
+		PageSetup settings = model.getPageSetup();
+
+		if (settings.getPageFormat() == null) {
+			paper = output.getPageDefinition().getPageFormat(0).getPaper();
+			settings.setPageFormat(PageFormatFactory.getInstance().getPageFormatName(paper.getWidth(), paper.getHeight()));
+		} else {
+			paper = PageFormatFactory.getInstance().createPaper(settings.getPageFormat());
+		}
+
+		PageFormat pageFormat = null;
+		if (settings.getPageOrientation() == null) {
+			settings.setPageOrientation(output.getPageDefinition().getPageFormat(0).getOrientation());
+			pageFormat = output.getPageDefinition().getPageFormat(0);
+		} else {
+			int orientation = settings.getPageOrientation();
+			pageFormat = PageFormatFactory.getInstance().createPageFormat(paper, orientation);
+		}
+
+		if (settings.getBottomMargin() == null || settings.getLeftMargin() == null || settings.getRightMargin() == null
+				|| settings.getTopMargin() == null) {
+			Insets insets = PageFormatFactory.getInstance().getPageMargins(output.getPageDefinition().getPageFormat(0));
+			settings.setBottomMargin(insets.bottom);
+			settings.setLeftMargin(insets.left);
+			settings.setTopMargin(insets.top);
+			settings.setRightMargin(insets.right);
+		} else {
+			Insets insets = new Insets(settings.getTopMargin(), settings.getLeftMargin(), settings.getBottomMargin(),
+					settings.getRightMargin());
+			PageFormatFactory.getInstance().setPageMargins(pageFormat, insets);
+		}
+
+		PageDefinition format = new SimplePageDefinition(pageFormat);
+		output.setPageDefinition(format);
+
+	}
+	
 }

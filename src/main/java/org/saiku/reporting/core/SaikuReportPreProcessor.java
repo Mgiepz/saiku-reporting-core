@@ -15,9 +15,8 @@ import org.pentaho.reporting.engine.classic.core.function.StructureFunction;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
 import org.pentaho.reporting.engine.classic.wizard.WizardOverrideFormattingFunction;
-import org.pentaho.reporting.libraries.resourceloader.ResourceManager;
 import org.saiku.reporting.core.builder.AbstractBuilder;
-import org.saiku.reporting.core.builder.CrosstabBuilder;
+import org.saiku.reporting.core.builder.MergeFormatUtil;
 import org.saiku.reporting.core.builder.PageFooterBuilder;
 import org.saiku.reporting.core.builder.PageHeaderBuilder;
 import org.saiku.reporting.core.builder.RelationalGroupBuilder;
@@ -64,12 +63,6 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 			final DefaultFlowController flowController)
 					throws ReportProcessingException
 					{
-		//		ResourceManager resourceManager = definition.getResourceManager();
-		//		this.reportSpecification = SaikuReportPreProcessorUtil.loadReportSpecification(definition, resourceManager);
-		//		if (reportSpecification == null)
-		//		{
-		//			return definition;
-		//		}
 
 		final StructureFunction[] functions = definition.getStructureFunctions();
 		boolean hasOverrideFunction = false;
@@ -119,8 +112,11 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 		PageFooterBuilder pageFooterBuilder = new PageFooterBuilder(attributeContext, definition, flowController, reportSpecification);
 		pageFooterBuilder.build();	
 
+		MergeFormatUtil.mergePageSetup(reportSpecification, definition);
+		
+		
 		return definition;
-					}
+		}
 
 	public SubReport performPreProcessing(final SubReport definition,
 			final DefaultFlowController flowController)

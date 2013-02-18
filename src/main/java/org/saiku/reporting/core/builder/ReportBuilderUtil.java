@@ -107,7 +107,13 @@ public class ReportBuilderUtil {
 		int numberOfUnsetWidths = 0;
 		for (int i = 0; i < detailFields.size(); i++) {
 			final FieldDefinition fieldDefinition = detailFields.get(i);
-			final Length length = null;//fieldDefinition.getFieldFormat().getWidth(); //TODO:
+			Length length = null;
+			if(fieldDefinition.getElementFormats()!=null &&
+			   fieldDefinition.getElementFormats().get(LayoutConstants.INNERMOST)!=null &&
+			   fieldDefinition.getElementFormats().get(LayoutConstants.INNERMOST).get(LayoutConstants.INNERMOST)!=null
+			){
+			  length = fieldDefinition.getElementFormats().get(LayoutConstants.INNERMOST).get(LayoutConstants.INNERMOST).getWidth();
+			}
 			if (length == null) {
 				widthSpecs[i] = null;
 				numberOfUnsetWidths++;
@@ -126,14 +132,11 @@ public class ReportBuilderUtil {
 			}
 		}
 		
-		
 		final float[] computedWidth = computeFieldWidths(widthSpecs, definition.getPageDefinition()
 				.getWidth());
-		
-		
+				
 		//if summ is now < 100% we need to resize the last one again
-		
-		
+
 		float total = 0;
 		
 		for (int i = 0; i < computedWidth.length; i++) {

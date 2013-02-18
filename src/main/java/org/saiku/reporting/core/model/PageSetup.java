@@ -21,21 +21,21 @@ public class PageSetup {
 	
 	@XmlElement(name="top-margin")
 	@JsonProperty("topMargin")
-	private int topMargin;
+	private Integer topMargin;
 	
 	@XmlElement(name="right-margin")
 	@JsonProperty("rightMargin")
-	private int rightMargin;
+	private Integer rightMargin;
 	
 	@XmlElement(name="bottom-margin")
 	@JsonProperty("bottomMargin")
-	private int bottomMargin;
+	private Integer bottomMargin;
 	
 	@XmlElement(name="left-margin")
 	@JsonProperty("leftMargin")
-	private int leftMargin;
+	private Integer leftMargin;
 
-	public int getPageOrientation() {
+	public Integer getPageOrientation() {
 		return pageOrientation;
 	}
 
@@ -51,35 +51,35 @@ public class PageSetup {
 		this.pageFormat = pageFormat;
 	}
 
-	public int getTopMargin() {
+	public Integer getTopMargin() {
 		return topMargin;
 	}
 
-	public void setTopMargin(int topMargin) {
+	public void setTopMargin(Integer topMargin) {
 		this.topMargin = topMargin;
 	}
 
-	public int getRightMargin() {
+	public Integer getRightMargin() {
 		return rightMargin;
 	}
 
-	public void setRightMargin(int rightMargin) {
+	public void setRightMargin(Integer rightMargin) {
 		this.rightMargin = rightMargin;
 	}
 
-	public int getBottomMargin() {
+	public Integer getBottomMargin() {
 		return bottomMargin;
 	}
 
-	public void setBottomMargin(int bottomMargin) {
+	public void setBottomMargin(Integer bottomMargin) {
 		this.bottomMargin = bottomMargin;
 	}
 
-	public int getLeftMargin() {
+	public Integer getLeftMargin() {
 		return leftMargin;
 	}
 
-	public void setLeftMargin(int leftMargin) {
+	public void setLeftMargin(Integer leftMargin) {
 		this.leftMargin = leftMargin;
 	}
 

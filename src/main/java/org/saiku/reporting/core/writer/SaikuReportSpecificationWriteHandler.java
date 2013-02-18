@@ -13,6 +13,8 @@ import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.Bu
 import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriterHandler;
 import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriterState;
 import org.pentaho.reporting.libraries.docbundle.WriteableDocumentBundle;
+import org.pentaho.reporting.libraries.xmlns.writer.DefaultTagDescription;
+import org.saiku.reporting.core.SaikuReportingCoreModule;
 import org.saiku.reporting.core.model.GroupDefinition;
 import org.saiku.reporting.core.model.Chart;
 import org.saiku.reporting.core.model.DataSource;
@@ -36,7 +38,7 @@ public class SaikuReportSpecificationWriteHandler implements
 
 		ReportSpecification reportSpecification = null; //wo kriegen wir die her?
 		
-	    final Object maybeSpec = state.getReport().getAttribute(AttributeNames.Wizard.NAMESPACE, "saiku-report-spec");
+	    final Object maybeSpec = state.getReport().getAttribute(SaikuReportingCoreModule.NAMESPACE, "saiku-report-spec");
 	    
 	    if (maybeSpec instanceof ReportSpecification)
 	    {
@@ -45,7 +47,9 @@ public class SaikuReportSpecificationWriteHandler implements
 
 	    final BundleWriterState wizardFileState = new BundleWriterState(state, "saiku-report-spec.xml");   
 	    final OutputStream outputStream = new BufferedOutputStream(bundle.createEntry(wizardFileState.getFileName(), "text/xml"));
-
+	    final DefaultTagDescription tagDescription = new DefaultTagDescription();
+	    tagDescription.setNamespaceHasCData(SaikuReportingCoreModule.NAMESPACE, false);
+	    
 		JAXBContext jc;
 		try {
 			jc = JAXBContext.newInstance(

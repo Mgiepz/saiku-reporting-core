@@ -159,6 +159,10 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 				//this will be hidden most of the times
 				detailsFooter.addElement(footerElement);
 			}
+			
+			CalculatedColumnBuilder calcColumnBuilder = new CalculatedColumnBuilder();
+			calcColumnBuilder.build(definition, reportSpecification);
+			
 		}
 
 	@Override

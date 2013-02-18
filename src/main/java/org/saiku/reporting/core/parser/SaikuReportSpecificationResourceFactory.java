@@ -1,57 +1,73 @@
 package org.saiku.reporting.core.parser;
 
-import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
-import org.pentaho.reporting.engine.classic.core.modules.parser.base.ReportResource;
-import org.pentaho.reporting.libraries.base.config.Configuration;
+import java.io.ByteArrayInputStream;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
+import org.pentaho.reporting.libraries.base.util.IOUtils;
 import org.pentaho.reporting.libraries.resourceloader.Resource;
+import org.pentaho.reporting.libraries.resourceloader.ResourceCreationException;
+import org.pentaho.reporting.libraries.resourceloader.ResourceData;
 import org.pentaho.reporting.libraries.resourceloader.ResourceKey;
-import org.pentaho.reporting.libraries.xmlns.parser.AbstractXmlResourceFactory;
-import org.pentaho.reporting.libraries.xmlns.parser.RootXmlReadHandler;
-import org.pentaho.reporting.libraries.xmlns.parser.XmlFactoryModule;
-import org.pentaho.reporting.libraries.xmlns.parser.XmlFactoryModuleRegistry;
+import org.pentaho.reporting.libraries.resourceloader.ResourceLoadingException;
+import org.pentaho.reporting.libraries.resourceloader.ResourceManager;
+import org.pentaho.reporting.libraries.resourceloader.SimpleResource;
+import org.pentaho.reporting.libraries.resourceloader.factory.AbstractResourceFactory;
+import org.saiku.reporting.core.model.Chart;
+import org.saiku.reporting.core.model.DataSource;
+import org.saiku.reporting.core.model.ElementFormat;
+import org.saiku.reporting.core.model.FieldDefinition;
+import org.saiku.reporting.core.model.GroupDefinition;
+import org.saiku.reporting.core.model.Label;
+import org.saiku.reporting.core.model.Length;
+import org.saiku.reporting.core.model.LengthUnit;
+import org.saiku.reporting.core.model.PageSetup;
+import org.saiku.reporting.core.model.Parameter;
 import org.saiku.reporting.core.model.ReportSpecification;
+import org.saiku.reporting.core.model.RootBandFormat;
+import org.saiku.reporting.core.model.TemplateDefinition;
+import org.xml.sax.SAXException;
 
-public class SaikuReportSpecificationResourceFactory extends
-		AbstractXmlResourceFactory {
-	
-	private static final XmlFactoryModuleRegistry registry = new XmlFactoryModuleRegistry();
+public class SaikuReportSpecificationResourceFactory extends AbstractResourceFactory{
 
-	  public static void register(final Class<? extends XmlFactoryModule> readHandler)
-	  {
-	    registry.register(readHandler);
-	  }
+	public SaikuReportSpecificationResourceFactory() {
+		super(ReportSpecification.class);
+	}
 
-	  public SaikuReportSpecificationResourceFactory()
-	  {
-	  }
+	@Override
+	public Resource create(ResourceManager resourceManager, ResourceData resourceData,
+			ResourceKey resourceKey) throws ResourceCreationException,
+			ResourceLoadingException {
 
-	  public void initializeDefaults()
-	  {
-	    super.initializeDefaults();
-	    final XmlFactoryModule[] registeredHandlers = registry.getRegisteredHandlers();
-	    for (int i = 0; i < registeredHandlers.length; i++)
-	    {
-	      registerModule(registeredHandlers[i]);
-	    }
-	  }
+		JAXBContext jc;
+		try {
+			jc = JAXBContext.newInstance(
+					Chart.class,
+					DataSource.class,
+					ElementFormat.class,
+					FieldDefinition.class,
+					GroupDefinition.class,
+					Label.class,
+					Length.class,
+					LengthUnit.class,
+					PageSetup.class,
+					Parameter.class,
+					ReportSpecification.class,
+					RootBandFormat.class,
+					TemplateDefinition.class	
+					);
+			
+			Unmarshaller u = jc.createUnmarshaller();
+			ReportSpecification reportSpecification = (ReportSpecification) u.unmarshal(resourceData.getResourceAsStream(resourceManager)); 
+			
+			return new SimpleResource(resourceKey, reportSpecification, ReportSpecification.class, 1);
 
-	  protected Configuration getConfiguration()
-	  {
-	    return ClassicEngineBoot.getInstance().getGlobalConfig();
-	  }
+		} catch (JAXBException e) {
+			throw new ResourceCreationException();
+		}
 
-	  public Class getFactoryType()
-	  {
-	    return ReportSpecification.class;
-	  }
-
-	  protected Resource createResource(final ResourceKey targetKey,
-	                                    final RootXmlReadHandler handler,
-	                                    final Object createdProduct,
-	                                    final Class createdType)
-	  {
-	    return new ReportResource
-	        (targetKey, handler.getDependencyCollector(), createdProduct, createdType, true);
-	  }
+	}
 
 }

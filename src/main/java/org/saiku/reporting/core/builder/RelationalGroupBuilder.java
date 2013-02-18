@@ -1,6 +1,7 @@
 package org.saiku.reporting.core.builder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.pentaho.reporting.engine.classic.core.AbstractReportDefinition;
@@ -22,6 +23,7 @@ import org.pentaho.reporting.engine.classic.core.style.ElementStyleKeys;
 import org.pentaho.reporting.engine.classic.core.wizard.AutoGeneratorUtility;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
 import org.pentaho.reporting.libraries.base.util.StringUtils;
+import org.saiku.reporting.core.model.ElementFormat;
 import org.saiku.reporting.core.model.FieldDefinition;
 import org.saiku.reporting.core.model.GroupDefinition;
 import org.saiku.reporting.core.model.ReportSpecification;
@@ -179,6 +181,8 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 			
 			headerMessageElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass);
 			headerMessageElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid);
+
+			MergeFormatUtil.mergeElementFormats(headerMessageElement, headerDefinition);
 			
 			headerElement.addElement(headerMessageElement);
 			
@@ -219,51 +223,10 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 		}
 	}
 
-//	/**
-//	 * Removes the unusedTemplateGroups based on the assumption that if a group
-//	 * doesn't have any fields assigned to it that it is empty.
-//	 * 
-//	 * @param definition
-//	 */
-//	private void removedUnusedTemplateGroups(final int groupsDefined) {
-//		final RelationalGroup[] templateRelationalGroups = getTemplateRelationalGroups(definition);
-//		final int templateRelationalGroupCount = templateRelationalGroups.length;
-//		for (int i = groupsDefined; i < templateRelationalGroupCount; i++) {
-//			final RelationalGroup templateRelationalGroup = templateRelationalGroups[i];
-//			definition.removeGroup(templateRelationalGroup);
-//		}
-//	}
-//
-//	/**
-//	 * @param definition
-//	 * @return the relational groups in the templates in a flattened array.
-//	 */
-//	private RelationalGroup[] getTemplateRelationalGroups(AbstractReportDefinition definition) {
-//		final ArrayList<RelationalGroup> relationalGroups = new ArrayList<RelationalGroup>();
-//		Group group = definition.getRootGroup();
-//		while (group != null && group instanceof RelationalGroup) {
-//			relationalGroups.add((RelationalGroup) group);
-//			final GroupBody body = group.getBody();
-//			if (body instanceof SubGroupBody) {
-//				final SubGroupBody sgBody = (SubGroupBody) body;
-//				if (sgBody.getGroup() instanceof RelationalGroup) {
-//					group = sgBody.getGroup();
-//				} else {
-//					group = null;
-//				}
-//			} else {
-//				group = null;
-//			}
-//		}
-//
-//		return relationalGroups.toArray(new RelationalGroup[relationalGroups.size()]);
-//	}
-//	
-
-	protected void configureRelationalGroupFooter(final RelationalGroup group, final GroupDefinition groupDefinitionDefinition, final int index)
+	protected void configureRelationalGroupFooter(final RelationalGroup group, final GroupDefinition groupDefinition, final int index)
 	throws ReportProcessingException {
 
-		final RootBandFormat footerDefinition = groupDefinitionDefinition.getFooterFormat();
+		final RootBandFormat footerDefinition = groupDefinition.getFooterFormat();
 		ArrayList<FieldDefinition> detailFields =  reportSpecification.getFieldDefinitions();
 
 		if (!footerDefinition.isVisible()) {
@@ -283,20 +246,22 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 		
 		int i =0;
 		for (FieldDefinition field : detailFields) {
-			setupGroupsummaryField(itemBand, field, computedWidth[i], i);
+			setupGroupsummaryField(itemBand, field, groupDefinition, computedWidth[i], i);
 			i++;
 		}
 
 	}
-
 	
-	protected void setupGroupsummaryField(final Band groupSummaryBand, final FieldDefinition field, final float width,
+	protected void setupGroupsummaryField(final Band groupSummaryBand, final FieldDefinition fieldDefinition, GroupDefinition groupDefinition, final float width,
 			final int fieldIdx) throws ReportProcessingException {
-		if (StringUtils.isEmpty(field.getId())) {
+		
+		String fieldId = groupDefinition.getFieldId();
+		
+		if (StringUtils.isEmpty(fieldId)) {
 			return;
 		}
 
-		final Class aggFunctionClass = field.getAggregationFunction().getClassObject();
+		final Class aggFunctionClass = fieldDefinition.getAggregationFunction().getClassObject();
 
 		// If an aggregation is set we assume that the user wants the summary to
 		// be shown
@@ -304,11 +269,12 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 
 		if (aggFunctionClass != null) {
 			footerElement = ReportBuilderUtil.generateFooterElement(aggFunctionClass, 
-					ReportBuilderUtil.computeElementType(field.getId(), flowController),
+					ReportBuilderUtil.computeElementType(fieldId, flowController),
 					null,
-					field.getId()
+					fieldId
 					);
 		}
+		
 		// otherwise we show a messagelabel where the user can enter additional
 		// info
 		else {
@@ -321,12 +287,40 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 		footerElement.getStyle().setStyleProperty(ElementStyleKeys.MIN_WIDTH, new Float(width));
 		if (Boolean.TRUE.equals(footerElement.getAttribute(AttributeNames.Wizard.NAMESPACE,
 				AttributeNames.Wizard.ALLOW_METADATA_STYLING))) {
-			footerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, "CachedWizardFormatData", field);
+			footerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, "CachedWizardFormatData", fieldDefinition);
 		}
 		if (Boolean.TRUE.equals(footerElement.getAttribute(AttributeNames.Wizard.NAMESPACE,
 				AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES))) {
-			footerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, "CachedWizardFieldData", field);
+			footerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, "CachedWizardFieldData", fieldDefinition);
 		}
+		
+		//jetzt noch aus den field definition
+		
+		String relGroup = fieldDefinition.getId();
+		
+		String uid = RPT_DETAILS + fieldIdx + "-" + INNERMOST + "-" + relGroup;
+		String htmlClass = "saiku " + uid;
+		
+		ElementFormat format = null;
+		
+		HashMap<String, ElementFormat> m = fieldDefinition.getElementFormats().get(fieldId);
+		if(m==null){
+			format	= new ElementFormat();
+			m = new HashMap<String, ElementFormat>();
+			m.put(relGroup, format);
+			fieldDefinition.getElementFormats().put(fieldId,m);
+		}else{
+			format = m.get(relGroup);
+			if(format==null){
+				format	= new ElementFormat();
+				m.put(relGroup, format);
+			}
+		}
+
+		MergeFormatUtil.mergeElementFormats(footerElement, format);
+
+		footerElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass);
+		footerElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid);
 
 		groupSummaryBand.addElement(footerElement);
 
