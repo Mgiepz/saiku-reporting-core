@@ -1,7 +1,6 @@
 package org.saiku.reporting.core.builder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -116,21 +115,7 @@ public class SimpleCrosstabBuilder extends AbstractBuilder {
 			//Element fieldItem = createFieldItem(fieldDefinition.getId(), group, fieldDefinition.getAggregationFunction().getClass());
 			Element fieldItem = createFieldItem(fieldDefinition.getId(), aggregationGroup, TotalGroupSumFunction.class);
 			
-			ElementFormat format = null;
-			
-			HashMap<String, ElementFormat> m = fieldDefinition.getElementFormats().get(colGroup);
-			if(m==null){
-				format	= new ElementFormat();
-				m = new HashMap<String, ElementFormat>();
-				m.put(rowGroup, format);
-				fieldDefinition.getElementFormats().put(colGroup,m);
-			}else{
-				format = m.get(rowGroup);
-				if(format==null){
-					format	= new ElementFormat();
-					m.put(rowGroup, format);
-				}
-			}
+			ElementFormat format = upsertFormatDefinition(colGroup, rowGroup, fieldDefinition);
 
 			MergeFormatUtil.mergeElementFormats(fieldItem, format);
 			
@@ -144,7 +129,7 @@ public class SimpleCrosstabBuilder extends AbstractBuilder {
 
 		return cell;
 	}
-	
+
 	public void build() throws ReportProcessingException {
 
 		/*

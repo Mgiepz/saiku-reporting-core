@@ -22,7 +22,7 @@ public class ElementFormat extends BaseElement {
 	public ElementFormat() {
 //		this.horizontalAlignment = ElementAlignment.CENTER;
 //		this.verticalAlignment = ElementAlignment.MIDDLE;		
-		this.width = new Length(LengthUnit.PERCENTAGE, Math.round(33*1000)/1000);
+//		this.width = new Length(LengthUnit.PERCENTAGE, Math.round(33*1000)/1000);
 
 	}
 

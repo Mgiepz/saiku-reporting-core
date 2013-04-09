@@ -65,6 +65,9 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 			detailElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES,
 					false);
 			
+			detailElement.setAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.FORMAT_STRING,
+					field.getDataFormat());
+			
 			String uid = RPT_DETAILS + j   + "-" + INNERMOST + "-" + INNERMOST;
 
 			String htmlClass = "saiku " + uid;
@@ -72,22 +75,8 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 			detailElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass);
 			detailElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid);
 			
-			ElementFormat format = null;
+			ElementFormat format = upsertFormatDefinition(INNERMOST, INNERMOST, field);
 			
-			HashMap<String, ElementFormat> m = field.getElementFormats().get(INNERMOST);
-			if(m==null){
-				format	= new ElementFormat();
-				m = new HashMap<String, ElementFormat>();
-				m.put(INNERMOST, format);
-				field.getElementFormats().put(INNERMOST,m);
-			}else{
-				format = m.get(INNERMOST);
-				if(format==null){
-					format	= new ElementFormat();
-					m.put(INNERMOST, format);
-				}
-			}
-
 			MergeFormatUtil.mergeElementFormats(detailElement, format);
 
 			itemBand.addElement(detailElement);

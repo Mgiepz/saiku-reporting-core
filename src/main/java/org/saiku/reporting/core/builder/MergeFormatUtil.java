@@ -42,6 +42,8 @@ import org.pentaho.reporting.engine.classic.core.style.TextStyleKeys;
 import org.pentaho.reporting.engine.classic.core.style.resolver.SimpleStyleResolver;
 import org.pentaho.reporting.engine.classic.core.util.PageFormatFactory;
 import org.saiku.reporting.core.model.ElementFormat;
+import org.saiku.reporting.core.model.Length;
+import org.saiku.reporting.core.model.LengthUnit;
 import org.saiku.reporting.core.model.PageSetup;
 import org.saiku.reporting.core.model.ReportSpecification;
 
@@ -112,16 +114,13 @@ public class MergeFormatUtil {
 			prptFormat.setStyleProperty(ElementStyleKeys.PADDING_RIGHT,saikuFormat.getRightPadding());
 		}
 
-		/*
-		 * warum ist das hier negativ
-		 */
-
-		if (saikuFormat.getWidth() == null) {
-			final Float width = (Float) styleSheet.getStyleProperty(ElementStyleKeys.MIN_WIDTH, null);
-//			saikuFormat.setWidth(-width);
-		} else {
-			// prptFormat.setStyleProperty(ElementStyleKeys.MIN_WIDTH,
-			// -(new Float(saikuFormat.getWidth())));
+		//width wird immer gesetzt. wir vertrauen hier dem server
+		final Float width = (Float) styleSheet.getStyleProperty(ElementStyleKeys.MIN_WIDTH, null);
+		//seeems like it does not work on crosstabs yet
+		if(width<0){
+			saikuFormat.setWidth(new Length(LengthUnit.PERCENTAGE , -width));
+		}else{
+			saikuFormat.setWidth(new Length(LengthUnit.POINTS , width));
 		}
 
 		if (saikuFormat.getBackgroundColor() == null) {
@@ -154,7 +153,7 @@ public class MergeFormatUtil {
 
 		if (saikuFormat.getFontItalic() == null) {
 			final Boolean fontItalic = (Boolean) styleSheet.getStyleProperty(TextStyleKeys.ITALIC, null);
-			saikuFormat.setFontBold(fontItalic);
+			saikuFormat.setFontItalic(fontItalic);
 		} else {
 			prptFormat.setStyleProperty(TextStyleKeys.ITALIC, saikuFormat.getFontItalic());
 		}
@@ -228,5 +227,7 @@ public class MergeFormatUtil {
 		output.setPageDefinition(format);
 
 	}
+	
+	
 	
 }

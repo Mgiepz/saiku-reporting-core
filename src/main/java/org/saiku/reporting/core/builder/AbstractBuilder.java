@@ -4,6 +4,7 @@
 package org.saiku.reporting.core.builder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.pentaho.reporting.engine.classic.core.AbstractReportDefinition;
 import org.pentaho.reporting.engine.classic.core.AttributeNames;
@@ -16,6 +17,7 @@ import org.pentaho.reporting.engine.classic.core.metadata.ElementType;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
 import org.saiku.reporting.core.model.ElementFormat;
+import org.saiku.reporting.core.model.FieldDefinition;
 import org.saiku.reporting.core.model.Label;
 import org.saiku.reporting.core.model.ReportSpecification;
 
@@ -121,6 +123,25 @@ public abstract class AbstractBuilder implements LayoutConstants{
 				Element el = (Element) e;
 				
 				markupElement(e, format, value, uid, el);
+			}
+
+	protected ElementFormat upsertFormatDefinition(String colGroup, String rowGroup,
+			FieldDefinition fieldDefinition) {
+				ElementFormat format;
+				HashMap<String, ElementFormat> m = fieldDefinition.getElementFormats().get(colGroup);
+				if(m==null){
+					format	= new ElementFormat();
+					m = new HashMap<String, ElementFormat>();
+					m.put(rowGroup, format);
+					fieldDefinition.getElementFormats().put(colGroup,m);
+				}else{
+					format = m.get(rowGroup);
+					if(format==null){
+						format	= new ElementFormat();
+						m.put(rowGroup, format);
+					}
+				}
+				return format;
 			}
 
 

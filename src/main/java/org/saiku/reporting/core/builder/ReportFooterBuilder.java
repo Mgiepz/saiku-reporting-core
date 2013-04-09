@@ -115,22 +115,8 @@ public class ReportFooterBuilder extends AbstractBuilder {
 
 		String uid = RPT_DETAILS + fieldIdx + LayoutConstants.INNERMOST + LayoutConstants.OUTERMOST;
 		String htmlClass = "saiku " + uid;
-		
-		ElementFormat format = null;
-		
-		HashMap<String, ElementFormat> m = field.getElementFormats().get(fieldId);
-		if(m==null){
-			format	= new ElementFormat();
-			m = new HashMap<String, ElementFormat>();
-			m.put(LayoutConstants.OUTERMOST, format);
-			field.getElementFormats().put(fieldId,m);
-		}else{
-			format = m.get(LayoutConstants.OUTERMOST);
-			if(format==null){
-				format	= new ElementFormat();
-				m.put(LayoutConstants.OUTERMOST, format);
-			}
-		}
+
+		ElementFormat format = upsertFormatDefinition(INNERMOST, OUTERMOST, field);
 
 		MergeFormatUtil.mergeElementFormats(footerElement, format);
 

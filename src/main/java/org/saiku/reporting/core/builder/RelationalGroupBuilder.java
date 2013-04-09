@@ -294,28 +294,12 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 			footerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, "CachedWizardFieldData", fieldDefinition);
 		}
 		
-		//jetzt noch aus den field definition
-		
 		String relGroup = fieldDefinition.getId();
 		
 		String uid = RPT_DETAILS + fieldIdx + "-" + INNERMOST + "-" + relGroup;
 		String htmlClass = "saiku " + uid;
 		
-		ElementFormat format = null;
-		
-		HashMap<String, ElementFormat> m = fieldDefinition.getElementFormats().get(fieldId);
-		if(m==null){
-			format	= new ElementFormat();
-			m = new HashMap<String, ElementFormat>();
-			m.put(relGroup, format);
-			fieldDefinition.getElementFormats().put(fieldId,m);
-		}else{
-			format = m.get(relGroup);
-			if(format==null){
-				format	= new ElementFormat();
-				m.put(relGroup, format);
-			}
-		}
+		ElementFormat format = upsertFormatDefinition(INNERMOST, relGroup, fieldDefinition);
 
 		MergeFormatUtil.mergeElementFormats(footerElement, format);
 

@@ -135,7 +135,7 @@ public class ReportBuilderUtil {
 		final float[] computedWidth = computeFieldWidths(widthSpecs, definition.getPageDefinition()
 				.getWidth());
 				
-		//if summ is now < 100% we need to resize the last one again
+		//if sum is now < 100% we need to resize the last one again
 
 		float total = 0;
 		
@@ -291,7 +291,11 @@ public class ReportBuilderUtil {
 	public static Element generateFooterElement(Class aggregationType, 
 			ElementType targetType, String group, String fieldName) {
 		
-		return AutoGeneratorUtility.generateFooterElement(aggregationType, targetType, group, fieldName);
+		Element element = AutoGeneratorUtility.generateFooterElement(aggregationType, targetType, group, fieldName);
+		element.setAttribute(AttributeNames.Wizard.NAMESPACE,
+		          AttributeNames.Wizard.ALLOW_METADATA_STYLING, Boolean.FALSE);
+		
+		return element;
 	}
 
 
