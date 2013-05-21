@@ -23,23 +23,17 @@ import java.awt.Color;
 import java.awt.Insets;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.pentaho.reporting.engine.classic.core.Element;
 import org.pentaho.reporting.engine.classic.core.ElementAlignment;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.PageDefinition;
 import org.pentaho.reporting.engine.classic.core.ReportElement;
 import org.pentaho.reporting.engine.classic.core.SimplePageDefinition;
-import org.pentaho.reporting.engine.classic.core.layout.style.SimpleStyleSheet;
 import org.pentaho.reporting.engine.classic.core.style.ElementStyleKeys;
 import org.pentaho.reporting.engine.classic.core.style.ElementStyleSheet;
 import org.pentaho.reporting.engine.classic.core.style.TextStyleKeys;
-import org.pentaho.reporting.engine.classic.core.style.resolver.SimpleStyleResolver;
 import org.pentaho.reporting.engine.classic.core.util.PageFormatFactory;
 import org.saiku.reporting.core.model.ElementFormat;
 import org.saiku.reporting.core.model.Length;
@@ -59,31 +53,6 @@ public class MergeFormatUtil {
 
 	protected static Log log = LogFactory.getLog(MergeFormatUtil.class);
 
-	/*
-	 * Copies all element that are not null from the source to the target
-	 * if it is not null in the target
-	 */
-//	public static void mergeElementFormats(ElementFormat source, ElementFormat target) throws Exception {
-//
-//		BeanInfo beanInfo = Introspector.getBeanInfo(target.getClass());
-//
-//		for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
-//
-//			if (descriptor.getWriteMethod() != null) {
-//
-//				Object sourceValue = descriptor.getReadMethod().invoke(
-//						source);
-//				if (sourceValue != null) {
-//					descriptor.getWriteMethod().invoke(target, sourceValue);
-//				}
-//
-//			}
-//		}
-//		
-//	}
-
-
-
 	/**
 	 * Copies all element format prptFormation from a real report element to the
 	 * Saiku model and vice-versa.
@@ -93,7 +62,7 @@ public class MergeFormatUtil {
 	 */
 	public static void mergeElementFormats(ReportElement detailElement, ElementFormat saikuFormat) {
 
-		SimpleStyleSheet styleSheet = SimpleStyleResolver.resolveOneTime(detailElement); //TODO: cache this
+		ElementStyleSheet styleSheet = detailElement.getStyle(); //SimpleStyleResolver.resolveOneTime(detailElement); //TODO: cache this
 		ElementStyleSheet prptFormat = detailElement.getStyle();
 		
 		if (prptFormat == null || saikuFormat == null) {

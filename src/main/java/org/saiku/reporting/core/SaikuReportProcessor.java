@@ -4,17 +4,13 @@ import java.util.ArrayList;
 
 import org.pentaho.reporting.engine.classic.core.AbstractReportDefinition;
 import org.pentaho.reporting.engine.classic.core.AttributeNames;
-import org.pentaho.reporting.engine.classic.core.DataFactoryContext;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.ReportPreProcessor;
 import org.pentaho.reporting.engine.classic.core.cache.CachingDataFactory;
-import org.pentaho.reporting.engine.classic.core.designtime.datafactory.DesignTimeDataFactoryContext;
 import org.pentaho.reporting.engine.classic.core.function.ProcessingContext;
-import org.pentaho.reporting.engine.classic.core.function.ProcessingDataFactoryContext;
 import org.pentaho.reporting.engine.classic.core.function.StructureFunction;
 import org.pentaho.reporting.engine.classic.core.layout.output.DefaultProcessingContext;
 import org.pentaho.reporting.engine.classic.core.parameters.ParameterDefinitionEntry;
-import org.pentaho.reporting.engine.classic.core.states.StateUtilities;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.util.ReportParameterValues;
 import org.pentaho.reporting.engine.classic.core.wizard.DataSchemaDefinition;
@@ -66,8 +62,10 @@ public class SaikuReportProcessor {
 			.getParameterDefinitions();
 
 			//müssen die Parameter definitions nichtmehr hier rein???
-			final DefaultFlowController flowController = new DefaultFlowController
-					(processingContext, reportTemplate.getDataSchemaDefinition(), parameterValues);
+			DefaultFlowController flowController = new DefaultFlowController(
+					processingContext, definition,
+					parameterValues,
+					parameterDefinitions, false);
 
 			ensureSaikuPreProcessorIsAdded(reportTemplate, spec);
 			ensureHasOverrideWizardFormatting(reportTemplate, flowController);
@@ -75,7 +73,10 @@ public class SaikuReportProcessor {
 			dataFactory = new CachingDataFactory(
 					reportTemplate.getDataFactory(), false);
 
-			dataFactory.initialize(new DesignTimeDataFactoryContext(reportTemplate));
+			dataFactory.initialize(processingContext.getConfiguration(),
+					processingContext.getResourceManager(),
+					processingContext.getContentBase(),
+					processingContext.getResourceBundleFactory());
 
 			DefaultFlowController postQueryFlowController = flowController
 			.performQuery(dataFactory, reportTemplate.getQuery(),

@@ -8,18 +8,16 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.pentaho.reporting.engine.classic.core.AttributeNames;
 import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriterException;
 import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriterHandler;
 import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriterState;
 import org.pentaho.reporting.libraries.docbundle.WriteableDocumentBundle;
-import org.pentaho.reporting.libraries.xmlns.writer.DefaultTagDescription;
 import org.saiku.reporting.core.SaikuReportingCoreModule;
-import org.saiku.reporting.core.model.GroupDefinition;
 import org.saiku.reporting.core.model.Chart;
 import org.saiku.reporting.core.model.DataSource;
 import org.saiku.reporting.core.model.ElementFormat;
 import org.saiku.reporting.core.model.FieldDefinition;
+import org.saiku.reporting.core.model.GroupDefinition;
 import org.saiku.reporting.core.model.Label;
 import org.saiku.reporting.core.model.Length;
 import org.saiku.reporting.core.model.LengthUnit;
@@ -47,8 +45,8 @@ public class SaikuReportSpecificationWriteHandler implements
 
 	    final BundleWriterState wizardFileState = new BundleWriterState(state, "saiku-report-spec.xml");   
 	    final OutputStream outputStream = new BufferedOutputStream(bundle.createEntry(wizardFileState.getFileName(), "text/xml"));
-	    final DefaultTagDescription tagDescription = new DefaultTagDescription();
-	    tagDescription.setNamespaceHasCData(SaikuReportingCoreModule.NAMESPACE, false);
+	    //final DefaultTagDescription tagDescription = new DefaultTagDescription();
+	    //tagDescription.setNamespaceHasCData(SaikuReportingCoreModule.NAMESPACE, false);
 	    
 		JAXBContext jc;
 		try {

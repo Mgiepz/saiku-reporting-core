@@ -61,9 +61,13 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 
 			if (group == null) {
 				// create a new group and insert it at the end
-				final RelationalGroup relationalGroup;
+				RelationalGroup relationalGroup;
 				if (template != null) {
-					relationalGroup = (RelationalGroup) template.derive();
+					try {
+						relationalGroup = (RelationalGroup) template.derive();
+					} catch (CloneNotSupportedException e) {
+						relationalGroup = new RelationalGroup();
+					}
 				} else {
 					relationalGroup = new RelationalGroup();
 				}
@@ -159,8 +163,8 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 					Boolean.TRUE);
 			headerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.LABEL_FOR,
 					groupDefinition.getFieldId());
-			headerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.CACHED_WIZARD_FORMAT_DATA,
-					headerDefinition);
+//			headerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.CACHED_WIZARD_FORMAT_DATA,
+//					headerDefinition);
 			
 			final Element headerMessageElement = new Element();
 			headerMessageElement.setElementType(new MessageType());

@@ -1,12 +1,9 @@
 package org.saiku.reporting.core.parser;
 
-import java.io.ByteArrayInputStream;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.pentaho.reporting.libraries.base.util.IOUtils;
 import org.pentaho.reporting.libraries.resourceloader.Resource;
 import org.pentaho.reporting.libraries.resourceloader.ResourceCreationException;
 import org.pentaho.reporting.libraries.resourceloader.ResourceData;
@@ -28,7 +25,6 @@ import org.saiku.reporting.core.model.Parameter;
 import org.saiku.reporting.core.model.ReportSpecification;
 import org.saiku.reporting.core.model.RootBandFormat;
 import org.saiku.reporting.core.model.TemplateDefinition;
-import org.xml.sax.SAXException;
 
 public class SaikuReportSpecificationResourceFactory extends AbstractResourceFactory{
 

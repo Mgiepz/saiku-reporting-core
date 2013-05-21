@@ -22,7 +22,6 @@ import org.saiku.reporting.core.builder.PageHeaderBuilder;
 import org.saiku.reporting.core.builder.RelationalGroupBuilder;
 import org.saiku.reporting.core.builder.ReportFooterBuilder;
 import org.saiku.reporting.core.builder.ReportHeaderBuilder;
-import org.saiku.reporting.core.builder.SimpleCrosstabBuilder;
 import org.saiku.reporting.core.builder.TableBuilder;
 import org.saiku.reporting.core.model.ReportSpecification;
 
@@ -92,8 +91,7 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 		relationalGroupBuilder.build();
 
 		if(SaikuReportPreProcessorUtil.isCrosstab(reportSpecification)){	
-			SimpleCrosstabBuilder tableBuilder = new SimpleCrosstabBuilder(attributeContext, definition, flowController, reportSpecification);
-			tableBuilder.build();				
+			throw new ReportProcessingException("Crosstabs not supported");			
 		}
 		else{
 			TableBuilder tableBuilder = new TableBuilder(attributeContext, definition, flowController, reportSpecification);
@@ -135,13 +133,6 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 		{
 			throw new IllegalStateException();
 		}
-	}
-
-	@Override
-	public SubReport performPreDataProcessing(SubReport arg0,
-			DefaultFlowController arg1) throws ReportProcessingException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
