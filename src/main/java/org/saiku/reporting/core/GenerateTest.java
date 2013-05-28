@@ -28,7 +28,6 @@ import org.pentaho.reporting.engine.classic.core.modules.output.table.html.AllIt
 import org.pentaho.reporting.engine.classic.core.modules.output.table.html.FileSystemURLRewriter;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.html.HtmlOutputProcessor;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.html.HtmlPrinter;
-import org.pentaho.reporting.engine.classic.core.modules.output.table.html.HtmlTableModule;
 import org.pentaho.reporting.engine.classic.core.modules.output.table.html.StreamHtmlOutputProcessor;
 import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriter;
 import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriterException;
@@ -44,7 +43,6 @@ import org.pentaho.reporting.libraries.resourceloader.ResourceException;
 import org.pentaho.reporting.libraries.resourceloader.ResourceKeyCreationException;
 import org.pentaho.reporting.libraries.resourceloader.ResourceLoadingException;
 import org.pentaho.reporting.libraries.resourceloader.ResourceManager;
-import org.saiku.reporting.component.StandaloneReportingComponent;
 
 public class GenerateTest{
 
@@ -170,18 +168,18 @@ public class GenerateTest{
 		BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(
 				outputFile ));
 		
-		final StandaloneReportingComponent pentahoReportingPlugin = new StandaloneReportingComponent();
-		
-		pentahoReportingPlugin.setReport(report);
-		pentahoReportingPlugin.setPaginateOutput(true);
-		pentahoReportingPlugin.setInputs(null);
-		pentahoReportingPlugin.setDefaultOutputTarget(HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE);
-		pentahoReportingPlugin.setOutputTarget(HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE);
-		pentahoReportingPlugin.setDashboardMode(false);
-		pentahoReportingPlugin.setOutputStream(outputStream);
-		pentahoReportingPlugin.setAcceptedPage(0);
-		pentahoReportingPlugin.validate();
-		pentahoReportingPlugin.execute();
+//		final StandaloneReportingComponent pentahoReportingPlugin = new StandaloneReportingComponent();
+//		
+//		pentahoReportingPlugin.setReport(report);
+//		pentahoReportingPlugin.setPaginateOutput(true);
+//		pentahoReportingPlugin.setInputs(null);
+//		pentahoReportingPlugin.setDefaultOutputTarget(HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE);
+//		pentahoReportingPlugin.setOutputTarget(HtmlTableModule.TABLE_HTML_PAGE_EXPORT_TYPE);
+//		pentahoReportingPlugin.setDashboardMode(false);
+//		pentahoReportingPlugin.setOutputStream(outputStream);
+//		pentahoReportingPlugin.setAcceptedPage(0);
+//		pentahoReportingPlugin.validate();
+//		pentahoReportingPlugin.execute();
 		
 	}
 	
