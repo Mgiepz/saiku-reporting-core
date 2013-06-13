@@ -1,13 +1,10 @@
 package org.saiku.reporting.core.model;
 
-import java.util.HashMap;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.saiku.reporting.core.model.types.DatasourceType;
 
@@ -31,13 +28,13 @@ public class DataSource {
 		this.type = type;
 	}
 
-	public HashMap<String, String> getProperties() {
-		return properties;
-	}
-
-	public void setProperties(HashMap<String, String> properties) {
-		this.properties = properties;
-	}
+//	public HashMap<String, String> getProperties() {
+//		return properties;
+//	}
+//
+//	public void setProperties(HashMap<String, String> properties) {
+//		this.properties = properties;
+//	}
 
 	@XmlElement(name="id")
 	@JsonProperty("id")
@@ -47,8 +44,22 @@ public class DataSource {
 	@JsonProperty("type")
 	private DatasourceType type;
 	
-	@XmlElement(name="properties")
-	@JsonProperty("properties")
-	private HashMap<String,String> properties;
+	@XmlElement(name="query-string")
+	@JsonProperty("queryString")
+	private String queryString;
+
+	public String getQueryString() {
+		return queryString;
+	}
+
+	public void setQueryString(String queryString) {
+		this.queryString = queryString;
+	}	
+
+//	@XmlElement(name="properties")
+//	//@XmlElementWrapper(name="properties")
+//	@XmlJavaTypeAdapter(MapAdapter.class)
+//	@JsonProperty("properties")
+//	private HashMap<String,String> properties;
 	
 }

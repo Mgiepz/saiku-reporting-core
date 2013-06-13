@@ -15,6 +15,9 @@ import org.pentaho.reporting.engine.classic.core.function.StructureFunction;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
 import org.pentaho.reporting.engine.classic.wizard.WizardOverrideFormattingFunction;
+import org.pentaho.reporting.libraries.resourceloader.ResourceCreationException;
+import org.pentaho.reporting.libraries.resourceloader.ResourceKeyCreationException;
+import org.pentaho.reporting.libraries.resourceloader.ResourceLoadingException;
 import org.saiku.reporting.core.builder.AbstractBuilder;
 import org.saiku.reporting.core.builder.MergeFormatUtil;
 import org.saiku.reporting.core.builder.PageFooterBuilder;
@@ -31,13 +34,13 @@ import org.saiku.reporting.core.model.ReportSpecification;
  */
 public class SaikuReportPreProcessor implements ReportPreProcessor {
 
-	public ReportSpecification getReportSpecification() {
-		return reportSpecification;
-	}
-
-	public void setReportSpecification(ReportSpecification reportSpecification) {
-		this.reportSpecification = reportSpecification;
-	}
+//	public ReportSpecification getReportSpecification() {
+//		return reportSpecification;
+//	}
+//
+//	public void setReportSpecification(ReportSpecification reportSpecification) {
+//		this.reportSpecification = reportSpecification;
+//	}
 
 	private static final Log logger = LogFactory.getLog(SaikuReportPreProcessor.class);
 
@@ -63,6 +66,13 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 					throws ReportProcessingException
 					{
 
+		try {
+			this.reportSpecification = SaikuReportPreProcessorUtil.loadReportSpecification(definition, definition.getResourceManager());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ReportProcessingException("failed to load saiku-report-spec from srpt file", e);
+		}
+		
 		final StructureFunction[] functions = definition.getStructureFunctions();
 		boolean hasOverrideFunction = false;
 		for (int i = 0; i < functions.length; i++)

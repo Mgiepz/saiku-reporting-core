@@ -87,9 +87,11 @@ public class SaikuReportProcessor {
 			reportTemplate.setAttribute(AttributeNames.Wizard.NAMESPACE,
 					AttributeNames.Wizard.ENABLE, Boolean.TRUE);
 
-			//ist das einmal zu viel?
+	
 			ReportPreProcessor processor = new SaikuReportPreProcessor();
-			((SaikuReportPreProcessor) processor).setReportSpecification(spec);
+			
+			//((SaikuReportPreProcessor) processor).setReportSpecification(spec);
+			
 			MasterReport output = processor.performPreProcessing(
 					reportTemplate, postQueryFlowController);
 			
@@ -153,7 +155,7 @@ public class SaikuReportProcessor {
 			{
 				hasSaikuProcessor = true;
 				//Set the model on the processor
-				((SaikuReportPreProcessor) processor).setReportSpecification(reportSpec);
+				//((SaikuReportPreProcessor) processor).setReportSpecification(reportSpec);
 
 			}
 		}
@@ -161,7 +163,7 @@ public class SaikuReportProcessor {
 		{
 			//Add a new processor with the current model
 			final SaikuReportPreProcessor processor = new SaikuReportPreProcessor();
-			processor.setReportSpecification(reportSpec);
+			//processor.setReportSpecification(reportSpec);
 			report.addPreProcessor(processor);
 		}
 	}

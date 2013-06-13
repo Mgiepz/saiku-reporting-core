@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import junit.framework.TestCase;
 
@@ -16,6 +17,7 @@ import org.pentaho.reporting.libraries.resourceloader.Resource;
 import org.pentaho.reporting.libraries.resourceloader.ResourceKey;
 import org.pentaho.reporting.libraries.resourceloader.ResourceManager;
 import org.saiku.reporting.core.SaikuReportingCoreModule;
+import org.saiku.reporting.core.model.DataSource;
 import org.saiku.reporting.core.model.FieldDefinition;
 import org.saiku.reporting.core.model.ReportSpecification;
 
@@ -42,6 +44,12 @@ public class ReportReadWriteTest extends TestCase {
 		fieldDefinitions.add(new FieldDefinition());
 		spec.setFieldDefinitions(fieldDefinitions );
 
+		DataSource dataSource = new DataSource();
+		HashMap<String, String> props = new HashMap<String, String>();
+
+		dataSource.setQueryString("bölub");
+		spec.setDataSource(dataSource );
+
 		masterReport.setAttribute(SaikuReportingCoreModule.NAMESPACE, "saiku-report-spec", spec);
 
 		final ByteArrayOutputStream prptContent = new ByteArrayOutputStream();
@@ -65,8 +73,10 @@ public class ReportReadWriteTest extends TestCase {
 		    final Resource resource = manager.create(resourceKey, contentBase, ReportSpecification.class);
 		    
 			
-	       // return (ReportSpecification) resource.getResource(); 
+		    ReportSpecification spec2 = (ReportSpecification) resource.getResource(); 
 
+		    assertNotNull(spec2);
+		    
 			//ReportSpecification spec2 = (ReportSpecification) report.getAttribute(SaikuReportingCoreModule.NAMESPACE, "saiku-report-spec");
 			
 			//System.out.println(spec2.toString());
