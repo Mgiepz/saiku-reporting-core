@@ -86,12 +86,13 @@ public class MergeFormatUtil {
 		//width wird immer gesetzt. wir vertrauen hier dem server
 		final Float width = (Float) styleSheet.getStyleProperty(ElementStyleKeys.MIN_WIDTH, null);
 		//seeems like it does not work on crosstabs yet
-		if(width<0){
-			saikuFormat.setWidth(new Length(LengthUnit.PERCENTAGE , -width));
-		}else{
-			saikuFormat.setWidth(new Length(LengthUnit.POINTS , width));
+		if(width!=null){
+			if(width<0){
+				saikuFormat.setWidth(new Length(LengthUnit.PERCENTAGE , -width));
+			}else{
+				saikuFormat.setWidth(new Length(LengthUnit.POINTS , width));
+			}
 		}
-
 		if (saikuFormat.getBackgroundColor() == null) {
 			final Color color = (Color) styleSheet.getStyleProperty(ElementStyleKeys.BACKGROUND_COLOR, null);
 			saikuFormat.setBackgroundColor(color);

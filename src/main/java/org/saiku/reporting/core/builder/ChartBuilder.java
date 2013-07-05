@@ -3,7 +3,6 @@ package org.saiku.reporting.core.builder;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.pentaho.reporting.engine.classic.core.AttributeNames;
 import org.pentaho.reporting.engine.classic.core.Element;
 import org.pentaho.reporting.engine.classic.core.elementfactory.ContentFieldElementFactory;
 

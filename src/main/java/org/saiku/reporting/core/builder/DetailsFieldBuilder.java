@@ -3,8 +3,6 @@
  */
 package org.saiku.reporting.core.builder;
 
-import java.util.HashMap;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.reporting.engine.classic.core.AbstractReportDefinition;
@@ -86,44 +84,44 @@ public class DetailsFieldBuilder extends AbstractBuilder{
 						Boolean.TRUE);
 			}
 
-			//The Details Header
-			
-			if (detailsHeader != null) {
-				final Element headerElement = AutoGeneratorUtility.generateHeaderElement(field.getId());
-				ReportBuilderUtil.setupDefaultGrid(detailsHeader, headerElement);
-				headerElement.getStyle().setStyleProperty(ElementStyleKeys.MIN_WIDTH, new Float(width));
-
-				if (Boolean.TRUE.equals(headerElement.getAttribute(AttributeNames.Wizard.NAMESPACE,
-						AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES))) {
-					headerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, "CachedWizardFieldData", field);
-				}
-
-				headerElement.setAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.VALUE,
-						field.getName());
-
-				headerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.ALLOW_METADATA_STYLING,
-						false);
-				headerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES,
-						false);
-				
-				String hdUid = RPT_DETAILS_HEADER + j;
-
-				String hdHtmlClass = "saiku col-header " + hdUid;
-				
-				headerElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, hdHtmlClass);
-				headerElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, hdUid);
-
-				ElementFormat headerFormat = field.getHeaderFormat();
-
-				if(headerFormat==null){
-					headerFormat = new ElementFormat();
-					field.setHeaderFormat(headerFormat);
-				}
-				
-				MergeFormatUtil.mergeElementFormats(headerElement, headerFormat);
-				
-				detailsHeader.addElement(headerElement);
-			}
+//			//The Details Header
+//			
+//			if (detailsHeader != null) {
+//				final Element headerElement = AutoGeneratorUtility.generateHeaderElement(field.getId());
+//				ReportBuilderUtil.setupDefaultGrid(detailsHeader, headerElement);
+//				headerElement.getStyle().setStyleProperty(ElementStyleKeys.MIN_WIDTH, new Float(width));
+//
+//				if (Boolean.TRUE.equals(headerElement.getAttribute(AttributeNames.Wizard.NAMESPACE,
+//						AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES))) {
+//					headerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, "CachedWizardFieldData", field);
+//				}
+//
+//				headerElement.setAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.VALUE,
+//						field.getName());
+//
+//				headerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.ALLOW_METADATA_STYLING,
+//						false);
+//				headerElement.setAttribute(AttributeNames.Wizard.NAMESPACE, AttributeNames.Wizard.ALLOW_METADATA_ATTRIBUTES,
+//						false);
+//				
+//				String hdUid = RPT_DETAILS_HEADER + j;
+//
+//				String hdHtmlClass = "saiku col-header " + hdUid;
+//				
+//				headerElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, hdHtmlClass);
+//				headerElement.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, hdUid);
+//
+//				ElementFormat headerFormat = field.getHeaderFormat();
+//
+//				if(headerFormat==null){
+//					headerFormat = new ElementFormat();
+//					field.setHeaderFormat(headerFormat);
+//				}
+//				
+//				MergeFormatUtil.mergeElementFormats(headerElement, headerFormat);
+//				
+//				detailsHeader.addElement(headerElement);
+//			}
 			
 			//The Details Footer
 

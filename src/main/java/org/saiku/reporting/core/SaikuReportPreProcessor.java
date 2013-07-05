@@ -15,9 +15,6 @@ import org.pentaho.reporting.engine.classic.core.function.StructureFunction;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
 import org.pentaho.reporting.engine.classic.wizard.WizardOverrideFormattingFunction;
-import org.pentaho.reporting.libraries.resourceloader.ResourceCreationException;
-import org.pentaho.reporting.libraries.resourceloader.ResourceKeyCreationException;
-import org.pentaho.reporting.libraries.resourceloader.ResourceLoadingException;
 import org.saiku.reporting.core.builder.AbstractBuilder;
 import org.saiku.reporting.core.builder.MergeFormatUtil;
 import org.saiku.reporting.core.builder.PageFooterBuilder;
@@ -25,6 +22,7 @@ import org.saiku.reporting.core.builder.PageHeaderBuilder;
 import org.saiku.reporting.core.builder.RelationalGroupBuilder;
 import org.saiku.reporting.core.builder.ReportFooterBuilder;
 import org.saiku.reporting.core.builder.ReportHeaderBuilder;
+import org.saiku.reporting.core.builder.SimpleCrosstabBuilder;
 import org.saiku.reporting.core.builder.TableBuilder;
 import org.saiku.reporting.core.model.ReportSpecification;
 
@@ -33,14 +31,6 @@ import org.saiku.reporting.core.model.ReportSpecification;
  *
  */
 public class SaikuReportPreProcessor implements ReportPreProcessor {
-
-//	public ReportSpecification getReportSpecification() {
-//		return reportSpecification;
-//	}
-//
-//	public void setReportSpecification(ReportSpecification reportSpecification) {
-//		this.reportSpecification = reportSpecification;
-//	}
 
 	private static final Log logger = LogFactory.getLog(SaikuReportPreProcessor.class);
 
@@ -101,7 +91,8 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 		relationalGroupBuilder.build();
 
 		if(SaikuReportPreProcessorUtil.isCrosstab(reportSpecification)){	
-			throw new ReportProcessingException("Crosstabs not supported");			
+			SimpleCrosstabBuilder tableBuilder = new SimpleCrosstabBuilder(attributeContext, definition, flowController, reportSpecification);
+			tableBuilder.build();				
 		}
 		else{
 			TableBuilder tableBuilder = new TableBuilder(attributeContext, definition, flowController, reportSpecification);
@@ -144,5 +135,12 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 			throw new IllegalStateException();
 		}
 	}
-
+	
+	@Override
+	public SubReport performPreDataProcessing(SubReport arg0,
+			DefaultFlowController arg1) throws ReportProcessingException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }

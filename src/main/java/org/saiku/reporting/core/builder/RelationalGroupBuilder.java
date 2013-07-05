@@ -1,7 +1,6 @@
 package org.saiku.reporting.core.builder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.pentaho.reporting.engine.classic.core.AbstractReportDefinition;
@@ -63,11 +62,7 @@ public class RelationalGroupBuilder extends AbstractBuilder{
 				// create a new group and insert it at the end
 				RelationalGroup relationalGroup;
 				if (template != null) {
-					try {
-						relationalGroup = (RelationalGroup) template.derive();
-					} catch (CloneNotSupportedException e) {
-						relationalGroup = new RelationalGroup();
-					}
+					relationalGroup = (RelationalGroup) template.derive();
 				} else {
 					relationalGroup = new RelationalGroup();
 				}

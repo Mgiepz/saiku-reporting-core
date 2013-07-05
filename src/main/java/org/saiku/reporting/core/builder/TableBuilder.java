@@ -56,9 +56,10 @@ public class TableBuilder extends AbstractBuilder{
 		}
 
 		DetailsFieldBuilder detailsFieldBuilder = new DetailsFieldBuilder(attributeContext, definition, flowController, reportSpecification);
-		
+		DetailsHeaderBuilder detailsHeaderBuilder = new DetailsHeaderBuilder(attributeContext, definition, flowController, reportSpecification);
 		int j=0;
 		for (FieldDefinition field : detailFieldDefinitions) {
+			detailsHeaderBuilder.build(detailsHeader, field, computedWidth[j], j);	
 			detailsFieldBuilder.build(detailsHeader, detailsFooter, itemBand, field, computedWidth[j], j);	
 			j++;
 		}

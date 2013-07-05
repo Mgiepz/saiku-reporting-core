@@ -96,13 +96,9 @@ public class GenerateTest{
 		report.setQuery("MASTER_QUERY");
 		
 		final ProcessingContext processingContext = new DefaultProcessingContext();
+		final DefaultFlowController flowController = new DefaultFlowController
+		(processingContext, report.getDataSchemaDefinition(), new ReportParameterValues());
 
-		DefaultFlowController flowController = new DefaultFlowController(
-				processingContext, report.getDataSchemaDefinition(),
-				new ReportParameterValues(),
-				null, false);
-
-		
 
 		final SaikuReportPreProcessor processor = new SaikuReportPreProcessor();
 		final MasterReport masterReport = processor.performPreProcessing(report, flowController);

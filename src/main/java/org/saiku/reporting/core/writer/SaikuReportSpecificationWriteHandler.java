@@ -70,6 +70,8 @@ public class SaikuReportSpecificationWriteHandler implements
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			m.marshal(reportSpecification, outputStream);
 			
+			
+			outputStream.flush();
 			outputStream.close();
 			
 		    return wizardFileState.getFileName();

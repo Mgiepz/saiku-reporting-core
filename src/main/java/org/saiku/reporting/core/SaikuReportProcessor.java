@@ -7,6 +7,7 @@ import org.pentaho.reporting.engine.classic.core.AttributeNames;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.ReportPreProcessor;
 import org.pentaho.reporting.engine.classic.core.cache.CachingDataFactory;
+import org.pentaho.reporting.engine.classic.core.designtime.datafactory.DesignTimeDataFactoryContext;
 import org.pentaho.reporting.engine.classic.core.function.ProcessingContext;
 import org.pentaho.reporting.engine.classic.core.function.StructureFunction;
 import org.pentaho.reporting.engine.classic.core.layout.output.DefaultProcessingContext;
@@ -62,10 +63,8 @@ public class SaikuReportProcessor {
 			.getParameterDefinitions();
 
 			//müssen die Parameter definitions nichtmehr hier rein???
-			DefaultFlowController flowController = new DefaultFlowController(
-					processingContext, definition,
-					parameterValues,
-					parameterDefinitions, false);
+			final DefaultFlowController flowController = new DefaultFlowController
+					(processingContext, reportTemplate.getDataSchemaDefinition(), parameterValues);
 
 			ensureSaikuPreProcessorIsAdded(reportTemplate, spec);
 			ensureHasOverrideWizardFormatting(reportTemplate, flowController);
@@ -73,10 +72,7 @@ public class SaikuReportProcessor {
 			dataFactory = new CachingDataFactory(
 					reportTemplate.getDataFactory(), false);
 
-			dataFactory.initialize(processingContext.getConfiguration(),
-					processingContext.getResourceManager(),
-					processingContext.getContentBase(),
-					processingContext.getResourceBundleFactory());
+			dataFactory.initialize(new DesignTimeDataFactoryContext(reportTemplate));
 
 			DefaultFlowController postQueryFlowController = flowController
 			.performQuery(dataFactory, reportTemplate.getQuery(),
@@ -89,9 +85,7 @@ public class SaikuReportProcessor {
 
 	
 			ReportPreProcessor processor = new SaikuReportPreProcessor();
-			
-			//((SaikuReportPreProcessor) processor).setReportSpecification(spec);
-			
+		
 			MasterReport output = processor.performPreProcessing(
 					reportTemplate, postQueryFlowController);
 			
@@ -154,16 +148,12 @@ public class SaikuReportProcessor {
 			if (processor instanceof SaikuReportPreProcessor)
 			{
 				hasSaikuProcessor = true;
-				//Set the model on the processor
-				//((SaikuReportPreProcessor) processor).setReportSpecification(reportSpec);
-
 			}
 		}
 		if (!hasSaikuProcessor)
 		{
 			//Add a new processor with the current model
 			final SaikuReportPreProcessor processor = new SaikuReportPreProcessor();
-			//processor.setReportSpecification(reportSpec);
 			report.addPreProcessor(processor);
 		}
 	}
