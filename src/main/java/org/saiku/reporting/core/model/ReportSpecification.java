@@ -39,13 +39,13 @@ public class ReportSpecification {
 		this.dataSource = dataSource;
 	}
 
-	public ArrayList<Parameter> getParameters() {
-		return parameters;
-	}
-
-	public void setParameters(ArrayList<Parameter> parameters) {
-		this.parameters = parameters;
-	}
+//	public ArrayList<Parameter> getParameters() {
+//		return parameters;
+//	}
+//
+//	public void setParameters(ArrayList<Parameter> parameters) {
+//		this.parameters = parameters;
+//	}
 
 	public ReportSpecification() {
 		this.reportName = "Report";
@@ -105,9 +105,9 @@ public class ReportSpecification {
 	@JsonProperty("dataSource")
 	private DataSource dataSource;
 
-	@XmlElement(name="parameters")
-	@JsonProperty("parameters")
-	private ArrayList<Parameter> parameters;
+//	@XmlElement(name="parameters")
+//	@JsonProperty("parameters")
+//	private ArrayList<Parameter> parameters;
 
 	@XmlElement(name="custom-values")
 	@JsonProperty("customValues")

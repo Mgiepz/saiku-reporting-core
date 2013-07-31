@@ -22,10 +22,8 @@ import org.saiku.reporting.core.model.Label;
 import org.saiku.reporting.core.model.Length;
 import org.saiku.reporting.core.model.LengthUnit;
 import org.saiku.reporting.core.model.PageSetup;
-import org.saiku.reporting.core.model.Parameter;
 import org.saiku.reporting.core.model.ReportSpecification;
 import org.saiku.reporting.core.model.RootBandFormat;
-import org.saiku.reporting.core.model.TemplateDefinition;
 
 public class SaikuReportSpecificationWriteHandler implements
 		BundleWriterHandler {
@@ -51,19 +49,17 @@ public class SaikuReportSpecificationWriteHandler implements
 		JAXBContext jc;
 		try {
 			jc = JAXBContext.newInstance(
-					Chart.class,
-					DataSource.class,
+					RootBandFormat.class,
 					ElementFormat.class,
 					FieldDefinition.class,
 					GroupDefinition.class,
+					Chart.class,
 					Label.class,
-					Length.class,
-					LengthUnit.class,
+					DataSource.class,
 					PageSetup.class,
-					Parameter.class,
 					ReportSpecification.class,
-					RootBandFormat.class,
-					TemplateDefinition.class	
+					Length.class,
+					LengthUnit.class	
 					);
 
 			Marshaller m = jc.createMarshaller();

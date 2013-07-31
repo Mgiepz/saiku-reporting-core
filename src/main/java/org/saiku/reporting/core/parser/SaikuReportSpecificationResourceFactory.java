@@ -21,10 +21,8 @@ import org.saiku.reporting.core.model.Label;
 import org.saiku.reporting.core.model.Length;
 import org.saiku.reporting.core.model.LengthUnit;
 import org.saiku.reporting.core.model.PageSetup;
-import org.saiku.reporting.core.model.Parameter;
 import org.saiku.reporting.core.model.ReportSpecification;
 import org.saiku.reporting.core.model.RootBandFormat;
-import org.saiku.reporting.core.model.TemplateDefinition;
 
 public class SaikuReportSpecificationResourceFactory extends AbstractResourceFactory{
 
@@ -49,10 +47,10 @@ public class SaikuReportSpecificationResourceFactory extends AbstractResourceFac
 					Length.class,
 					LengthUnit.class,
 					PageSetup.class,
-					Parameter.class,
+					//Parameter.class,
+					//TemplateDefinition.class,
 					ReportSpecification.class,
-					RootBandFormat.class,
-					TemplateDefinition.class	
+					RootBandFormat.class
 					);
 			
 			Unmarshaller u = jc.createUnmarshaller();

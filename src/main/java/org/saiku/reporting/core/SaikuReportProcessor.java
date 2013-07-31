@@ -7,8 +7,8 @@ import org.pentaho.reporting.engine.classic.core.AttributeNames;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
 import org.pentaho.reporting.engine.classic.core.ReportPreProcessor;
 import org.pentaho.reporting.engine.classic.core.cache.CachingDataFactory;
-import org.pentaho.reporting.engine.classic.core.designtime.datafactory.DesignTimeDataFactoryContext;
 import org.pentaho.reporting.engine.classic.core.function.ProcessingContext;
+import org.pentaho.reporting.engine.classic.core.function.ProcessingDataFactoryContext;
 import org.pentaho.reporting.engine.classic.core.function.StructureFunction;
 import org.pentaho.reporting.engine.classic.core.layout.output.DefaultProcessingContext;
 import org.pentaho.reporting.engine.classic.core.parameters.ParameterDefinitionEntry;
@@ -72,7 +72,7 @@ public class SaikuReportProcessor {
 			dataFactory = new CachingDataFactory(
 					reportTemplate.getDataFactory(), false);
 
-			dataFactory.initialize(new DesignTimeDataFactoryContext(reportTemplate));
+			dataFactory.initialize(new ProcessingDataFactoryContext(processingContext, dataFactory));
 
 			DefaultFlowController postQueryFlowController = flowController
 			.performQuery(dataFactory, reportTemplate.getQuery(),
@@ -96,7 +96,7 @@ public class SaikuReportProcessor {
 
 			ensureSaikuReportPreProcessorIsRemoved(output);
 			
-			GenerateTest.storeReport(output);
+			//GenerateTest.storeReport(output);
 			
 			return output;
 
