@@ -29,6 +29,7 @@ import org.saiku.reporting.core.model.LengthUnit;
 import org.saiku.reporting.core.model.PageSetup;
 import org.saiku.reporting.core.model.ReportSpecification;
 import org.saiku.reporting.core.model.RootBandFormat;
+import org.saiku.reporting.core.model.TemplateDefinition;
 import org.saiku.reporting.core.model.types.GroupType;
 
 public class SaikuReportPreProcessorUtil {
@@ -118,7 +119,8 @@ public class SaikuReportPreProcessorUtil {
 				PageSetup.class,
 				ReportSpecification.class,
 				Length.class,
-				LengthUnit.class	
+				LengthUnit.class,
+				TemplateDefinition.class
 				);
 	}
 
