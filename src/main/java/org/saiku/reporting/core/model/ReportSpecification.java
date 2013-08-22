@@ -56,6 +56,7 @@ public class ReportSpecification {
 		this.groupDefinitions = new ArrayList<GroupDefinition>();
 		this.pageSetup = new PageSetup();
 		this.charts = new ArrayList<Chart>();
+		this.template = new TemplateDefinition();
 	}
 
 	@XmlElement(name="report-name")
@@ -105,6 +106,10 @@ public class ReportSpecification {
 	@JsonProperty("dataSource")
 	private DataSource dataSource;
 
+	@XmlElement(name="template")
+	@JsonProperty("template")
+	private TemplateDefinition template;
+
 //	@XmlElement(name="parameters")
 //	@JsonProperty("parameters")
 //	private ArrayList<Parameter> parameters;
@@ -140,7 +145,7 @@ public class ReportSpecification {
 	public ArrayList<Label> getPageHeaders() {
 		return pageHeaders;
 	}
-
+	
 	public void setPageHeaders(ArrayList<Label> pageHeaders) {
 		this.pageHeaders = pageHeaders;
 	}
@@ -167,6 +172,14 @@ public class ReportSpecification {
 
 	public ArrayList<Chart> getChart() {
 		return charts;
+	}
+	
+	public TemplateDefinition getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(TemplateDefinition template) {
+		this.template = template;
 	}
 
 	public ArrayList<GroupDefinition> getGroupDefinitions() {
