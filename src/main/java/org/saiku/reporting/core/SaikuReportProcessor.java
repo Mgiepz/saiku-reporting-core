@@ -11,6 +11,7 @@ import org.pentaho.reporting.engine.classic.core.function.ProcessingContext;
 import org.pentaho.reporting.engine.classic.core.function.ProcessingDataFactoryContext;
 import org.pentaho.reporting.engine.classic.core.function.StructureFunction;
 import org.pentaho.reporting.engine.classic.core.layout.output.DefaultProcessingContext;
+import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriterException;
 import org.pentaho.reporting.engine.classic.core.parameters.ParameterDefinitionEntry;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.util.ReportParameterValues;
@@ -26,7 +27,7 @@ import org.saiku.reporting.core.model.ReportSpecification;
  *
  */
 public class SaikuReportProcessor {
-	
+
 	/**
 	 * This method applies a ReportSpecification (The Saiku-Layout-Model)
 	 * to a prpt template and lets the Pentaho-Reporting-Engine run the
@@ -36,8 +37,11 @@ public class SaikuReportProcessor {
 	 * @param template
 	 * @param spec
 	 * @return
+	 * @throws BundleWriterException 
 	 */
-	public MasterReport preProcessReport(MasterReport reportTemplate, ReportSpecification spec){
+	public MasterReport preProcessReport(MasterReport reportTemplate, ReportSpecification spec) throws BundleWriterException{
+		
+		SaikuReportPreProcessorUtil.saveReportSpecification(reportTemplate, spec);
 		
 		CachingDataFactory dataFactory = null;
 		try {
@@ -66,7 +70,7 @@ public class SaikuReportProcessor {
 			final DefaultFlowController flowController = new DefaultFlowController
 					(processingContext, reportTemplate.getDataSchemaDefinition(), parameterValues);
 
-			ensureSaikuPreProcessorIsAdded(reportTemplate, spec);
+			ensureSaikuPreProcessorIsAdded(reportTemplate);
 			ensureHasOverrideWizardFormatting(reportTemplate, flowController);
 
 			dataFactory = new CachingDataFactory(
@@ -84,19 +88,24 @@ public class SaikuReportProcessor {
 					AttributeNames.Wizard.ENABLE, Boolean.TRUE);
 
 	
-			ReportPreProcessor processor = new SaikuReportPreProcessor();
-		
+			//warum müssen wir das hier überhaupt noch aufrufen? 
+			//der report sollte das doch selbst regeln
+			
+			SaikuReportPreProcessor processor = new SaikuReportPreProcessor();
+			processor.setReportSpecification(spec);
+			
 			MasterReport output = processor.performPreProcessing(
 					reportTemplate, postQueryFlowController);
-			
+
 			output.setAttribute(AttributeNames.Wizard.NAMESPACE,
 					AttributeNames.Wizard.ENABLE, Boolean.FALSE);
 
 			//TemplateUtils.mergePageSetup(model, output);
-
+	
 			ensureSaikuReportPreProcessorIsRemoved(output);
 			
-			//GenerateTest.storeReport(output);
+			//get back the enriched model
+			spec = processor.getReportSpecification();
 			
 			return output;
 
@@ -112,7 +121,7 @@ public class SaikuReportProcessor {
 		return reportTemplate;
 
 	}
-	
+
 	/**
 	 * Remove a SaikuReportPreProcessor from the report in case it has one
 	 * @param report
@@ -137,8 +146,7 @@ public class SaikuReportProcessor {
 
 	}
 
-	protected static void ensureSaikuPreProcessorIsAdded(final AbstractReportDefinition report,
-			ReportSpecification reportSpec)
+	protected static void ensureSaikuPreProcessorIsAdded(final AbstractReportDefinition report)
 	{
 		final ReportPreProcessor[] processors = report.getPreProcessors();
 		boolean hasSaikuProcessor = false;

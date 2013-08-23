@@ -12,6 +12,7 @@ import org.pentaho.reporting.engine.classic.core.ReportProcessingException;
 import org.pentaho.reporting.engine.classic.core.SubReport;
 import org.pentaho.reporting.engine.classic.core.function.ProcessingContext;
 import org.pentaho.reporting.engine.classic.core.function.StructureFunction;
+import org.pentaho.reporting.engine.classic.core.modules.parser.bundle.writer.BundleWriterException;
 import org.pentaho.reporting.engine.classic.core.states.datarow.DefaultFlowController;
 import org.pentaho.reporting.engine.classic.core.wizard.DefaultDataAttributeContext;
 import org.pentaho.reporting.engine.classic.wizard.WizardOverrideFormattingFunction;
@@ -39,6 +40,14 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 	protected DefaultFlowController flowController;
 	protected ReportSpecification reportSpecification;
 
+	public void setReportSpecification(ReportSpecification reportSpecification) {
+		this.reportSpecification = reportSpecification;
+	}
+
+	public ReportSpecification getReportSpecification() {
+		return reportSpecification;
+	}
+
 	/**
 	 * 
 	 */
@@ -56,12 +65,12 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 					throws ReportProcessingException
 					{
 
-		try {
-			this.reportSpecification = SaikuReportPreProcessorUtil.loadReportSpecification(definition, definition.getResourceManager());
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ReportProcessingException("failed to load saiku-report-spec from srpt file", e);
-		}
+//		try {
+//			this.reportSpecification = SaikuReportPreProcessorUtil.loadReportSpecification(definition, definition.getResourceManager(), "saiku-report-spec");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new ReportProcessingException("failed to load saiku-report-spec from srpt file", e);
+//		}
 		
 		final StructureFunction[] functions = definition.getStructureFunctions();
 		boolean hasOverrideFunction = false;
@@ -112,8 +121,7 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 		pageFooterBuilder.build();	
 
 		MergeFormatUtil.mergePageSetup(reportSpecification, definition);
-		
-		
+
 		return definition;
 		}
 
