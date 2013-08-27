@@ -88,10 +88,8 @@ public abstract class AbstractBuilder implements LayoutConstants{
 				}
 
 			}
-
-			if(format!=null){
-				MergeFormatUtil.mergeElementFormats(e, format);
-			}
+			
+			MergeFormatUtil.mergeElementFormats(e, format);
 			
 			realIndex++;
 		}
@@ -102,23 +100,30 @@ public abstract class AbstractBuilder implements LayoutConstants{
 	protected void processElementInternal(ReportElement e, ArrayList<Label> labels, String uid) {
 				ElementFormat format = null;
 				String value = null;
-						
-				if(realIndex < labels.size()){
+
+				if(realIndex < labels.size() && labels.get(realIndex)!=null){
 					Label label = labels.get(realIndex);
-					if(label!=null){
-						format = label.getFormat();
-						value = label.getValue();
+					format = label.getFormat();
+					if(format == null){
+						format = new ElementFormat();
+						label.setFormat(format);
 					}
+					value = label.getValue();
+				}
+				else if(realIndex < labels.size() && labels.get(realIndex)==null){
+					value = (String) e.getAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.VALUE);
+					Label label = new Label(value);
+					format = new ElementFormat();
+					label.setFormat(format);
+					labels.set(realIndex, label);
 				}else{
-					//the label is not yet in the list
 					value = (String) e.getAttribute(AttributeNames.Core.NAMESPACE, AttributeNames.Core.VALUE);
 					Label label = new Label(value);
 					format = new ElementFormat();
 					label.setFormat(format);
 					labels.add(label);
 				}
-
-
+				
 				Element el = (Element) e;
 				
 				markupElement(e, format, value, uid, el);
