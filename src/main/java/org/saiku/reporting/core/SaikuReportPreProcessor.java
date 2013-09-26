@@ -106,13 +106,15 @@ public class SaikuReportPreProcessor implements ReportPreProcessor {
 		else{
 			TableBuilder tableBuilder = new TableBuilder(attributeContext, definition, flowController, reportSpecification);
 			tableBuilder.build();
+			
+			//Crosstabs do not need a summary footer as they have their own.
+			AbstractBuilder footerBuilder = new ReportFooterBuilder(attributeContext, definition, flowController, reportSpecification);
+			footerBuilder.build();	
+			
 		}
 
 		ReportHeaderBuilder headerBuilder = new ReportHeaderBuilder(attributeContext, definition, flowController, reportSpecification);
 		headerBuilder.build();		
-
-		AbstractBuilder footerBuilder = new ReportFooterBuilder(attributeContext, definition, flowController, reportSpecification);
-		footerBuilder.build();			
 
 		PageHeaderBuilder pageHeaderBuilder = new PageHeaderBuilder(attributeContext, definition, flowController, reportSpecification);
 		pageHeaderBuilder.build();		
