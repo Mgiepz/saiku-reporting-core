@@ -54,13 +54,13 @@ public class ReportSpecification {
 		this.dataSource = dataSource;
 	}
 
-//	public ArrayList<Parameter> getParameters() {
-//		return parameters;
-//	}
-//
-//	public void setParameters(ArrayList<Parameter> parameters) {
-//		this.parameters = parameters;
-//	}
+	public ArrayList<Parameter> getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(ArrayList<Parameter> parameters) {
+		this.parameters = parameters;
+	}
 
 	public ReportSpecification() {
 		this.reportName = "Report";
@@ -70,6 +70,7 @@ public class ReportSpecification {
 		this.reportFooters = new ArrayList<Label>();
 		this.groupDefinitions = new ArrayList<GroupDefinition>();
 		this.pageSetup = new PageSetup();
+		this.parameters = new ArrayList<Parameter>();
 		this.charts = new ArrayList<Chart>();
 		this.template = new TemplateDefinition();
 	}
@@ -125,9 +126,9 @@ public class ReportSpecification {
 	@JsonProperty("template")
 	private TemplateDefinition template;
 
-//	@XmlElement(name="parameters")
-//	@JsonProperty("parameters")
-//	private ArrayList<Parameter> parameters;
+	@XmlElement(name="parameters")
+	@JsonProperty("parameters")
+	private ArrayList<Parameter> parameters;
 
 	@XmlElement(name="custom-values")
 	@JsonProperty("customValues")

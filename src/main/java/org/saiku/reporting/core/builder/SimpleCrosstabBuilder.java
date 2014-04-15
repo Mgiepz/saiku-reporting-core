@@ -221,6 +221,11 @@ public class SimpleCrosstabBuilder extends AbstractBuilder {
 				
 				headerItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.STYLE_CLASS, htmlClass + "-0");
 				headerItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Html.XML_ID, uid + "-0");
+				
+				//Is this used for style definitions?				
+				headerItem.setAttribute(AttributeNames.Html.NAMESPACE, AttributeNames.Xml.ID, uid + "-0");
+				
+				
 				columnGroup.getHeader().addElement(headerItem);
 				columnGroup.getHeader().getStyle().setStyleProperty(ElementStyleKeys.MIN_HEIGHT, -100f);
 				columnGroup.getHeader().getStyle().setStyleProperty(TextStyleKeys.BOLD, Boolean.TRUE);
