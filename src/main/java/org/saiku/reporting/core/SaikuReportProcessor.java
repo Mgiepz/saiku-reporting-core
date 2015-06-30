@@ -83,7 +83,7 @@ public class SaikuReportProcessor {
 
 			//müssen die Parameter definitions nichtmehr hier rein???
 			final DefaultFlowController flowController = new DefaultFlowController
-					(processingContext, reportTemplate.getDataSchemaDefinition(), parameterValues);
+					(processingContext, reportTemplate.getDataSchemaDefinition(), parameterValues,null);
 
 			ensureSaikuPreProcessorIsAdded(reportTemplate);
 			ensureHasOverrideWizardFormatting(reportTemplate, flowController);

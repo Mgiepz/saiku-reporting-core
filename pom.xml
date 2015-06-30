@@ -8,34 +8,21 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<pentaho.version>5.0.1-stable</pentaho.version>
+		<pentaho.version>5.3.0.2-261</pentaho.version>
 	</properties>
 
 	<repositories>
-		<repository>
-			<id>repo.pentaho.org</id>
-			<name>repo.pentaho.org-releases</name>
-			<url>http://repository.pentaho.org/artifactory/pentaho</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
+	<repository>
+			<id>pentaho-third-party</id>
+			<url>http://nexus.pentaho.org/content/repositories/proxied-3rd-party-releases/</url>
 		</repository>
 		<repository>
-		   <id>repo.pentaho.org3</id>
-        <name>repo.pentaho.org-snapshots</name>
-        <url>http://repository.pentaho.org/artifactory/public-snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>		
-
+			<id>pentaho-public-release</id>
+			<url>http://nexus.pentaho.org/content/repositories/pentaho-public-release-repos/</url>
+		</repository>
 		<repository>
-			<id>repo.pentaho.org2</id>
-			<name>sona</name>
-			<url>http://repo.pentaho.org/artifactory/third-party/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
+			<id>pentaho-snapshot</id>
+			<url>http://nexus.pentaho.org/content/repositories/public-snapshots/</url>
 		</repository>
 		<repository>
 			<id>java.net</id>

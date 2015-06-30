@@ -112,7 +112,8 @@ public class GenerateTest{
 		
 		final ProcessingContext processingContext = new DefaultProcessingContext();
 		final DefaultFlowController flowController = new DefaultFlowController
-		(processingContext, report.getDataSchemaDefinition(), new ReportParameterValues());
+		(processingContext, report.getDataSchemaDefinition(), new ReportParameterValues(),
+				null);
 
 
 		final SaikuReportPreProcessor processor = new SaikuReportPreProcessor();
